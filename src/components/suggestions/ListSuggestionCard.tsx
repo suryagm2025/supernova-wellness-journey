@@ -1,7 +1,7 @@
 
 import React, { ReactNode, useState } from 'react';
 import SuggestionCard from './SuggestionCard';
-import { Check, Circle } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -49,12 +49,11 @@ const ListSuggestionCard: React.FC<ListSuggestionCardProps> = ({
               )}
               onClick={() => toggleItem(item)}
             >
-              <div className={cn(
-                "flex-shrink-0 h-5 w-5 rounded-full border flex items-center justify-center",
-                isCompleted ? "border-supernova-blue bg-supernova-blue/20" : "border-gray-500"
-              )}>
-                {isCompleted && <Check size={12} className="text-supernova-blue" />}
-              </div>
+              {isCompleted ? (
+                <Check size={16} className="text-supernova-blue flex-shrink-0" />
+              ) : (
+                <div className="w-4 h-4 flex-shrink-0" /> // Empty spacer to maintain alignment
+              )}
               <span className={cn(
                 "text-sm",
                 isCompleted && "line-through"
