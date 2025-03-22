@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import GlassMorphicCard from '../ui/GlassMorphicCard';
-import { Clock, Droplet, Yoga } from 'lucide-react';
+import { Clock, Droplet, Stretch } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MorningCheckIn: React.FC = () => {
@@ -64,7 +64,7 @@ const MorningCheckIn: React.FC = () => {
         
         <div className="space-y-2">
           <label className="block text-sm text-gray-300 flex items-center">
-            <Yoga size={16} className="mr-2 text-gray-400" />
+            <Stretch size={16} className="mr-2 text-gray-400" />
             Any movement or meditation?
           </label>
           <input

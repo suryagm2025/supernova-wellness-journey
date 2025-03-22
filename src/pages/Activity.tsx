@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
-import { Activity as ActivityIcon, Play, Lightbulb, Dumbbell, Running, Bike } from 'lucide-react';
+import { Activity as ActivityIcon, Play, Lightbulb, Dumbbell, PersonStanding, Bike } from 'lucide-react';
 import { toast } from 'sonner';
 import ActivityTracker from '../components/dashboard/ActivityTracker';
 
@@ -38,7 +37,7 @@ const Activity = () => {
     {
       title: 'Evening Walk',
       description: '30-minute brisk walk to clear your mind and boost your step count',
-      icon: <Running size={24} className="text-supernova-blue" />,
+      icon: <PersonStanding size={24} className="text-supernova-blue" />,
     },
     {
       title: 'Bike Ride',

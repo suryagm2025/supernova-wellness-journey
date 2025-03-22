@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
-import { Moon, Clock, Smartphone, Heart } from 'lucide-react';
+import { MoonStar, Clock, Smartphone, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 
 const EveningCheck = () => {
@@ -35,7 +35,7 @@ const EveningCheck = () => {
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <div className="inline-flex items-center justify-center bg-supernova-pink/20 p-3 rounded-full mb-4">
-              <Moon size={32} className="text-supernova-pink" />
+              <MoonStar size={32} className="text-supernova-pink" />
             </div>
             <h1 className="text-3xl font-display font-semibold mb-2">Evening Check-In</h1>
             <p className="text-gray-400 max-w-2xl mx-auto">
@@ -46,7 +46,7 @@ const EveningCheck = () => {
           <GlassMorphicCard className="p-6 w-full max-w-xl mx-auto">
             <h3 className="text-xl font-display font-semibold mb-6 flex items-center">
               <span className="bg-supernova-pink/20 p-2 rounded-lg mr-3">
-                <Moon size={20} className="text-supernova-pink" />
+                <MoonStar size={20} className="text-supernova-pink" />
               </span>
               Evening Reflection
             </h3>
