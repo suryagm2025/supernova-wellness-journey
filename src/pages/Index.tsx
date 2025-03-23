@@ -5,6 +5,13 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { Activity, Brain, Smile, ArrowRight } from 'lucide-react';
+import AboutSection from '../components/sections/AboutSection';
+import WellnessBlocks from '../components/sections/WellnessBlocks';
+import PricingTable from '../components/sections/PricingTable';
+import TestimonialsSlider from '../components/sections/TestimonialsSlider';
+import WellnessDashboard from '../components/sections/WellnessDashboard';
+import BlogSection from '../components/sections/BlogSection';
+import ContactSection from '../components/sections/ContactSection';
 
 const Index = () => {
   return (
@@ -94,6 +101,66 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* About SuperNova Section */}
+      <AboutSection />
+      
+      {/* Smart Wellness Blocks Section */}
+      <section className="py-20 bg-gradient-to-br from-supernova-dark via-supernova-dark/90 to-supernova-dark">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-4xl mb-4">
+              Smart Wellness <span className="text-gradient">Blocks</span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Customizable modules that adapt to your unique wellness journey.
+            </p>
+          </div>
+          
+          <WellnessBlocks />
+        </div>
+      </section>
+      
+      {/* Pricing Table Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-4xl mb-4">
+              Simple <span className="text-gradient">Pricing</span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Choose the plan that fits your wellness journey.
+            </p>
+          </div>
+          
+          <PricingTable />
+        </div>
+      </section>
+      
+      {/* Testimonials Slider Section */}
+      <section className="py-20 bg-gradient-to-br from-supernova-dark via-supernova-dark/90 to-supernova-dark">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-4xl mb-4">
+              Real <span className="text-gradient">Results</span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              See how SuperNovaAI has transformed wellness journeys.
+            </p>
+          </div>
+          
+          <TestimonialsSlider />
+        </div>
+      </section>
+      
+      {/* Wellness Dashboard Section */}
+      <WellnessDashboard />
+      
+      {/* Blog Section */}
+      <BlogSection />
+      
+      {/* Contact Section */}
+      <ContactSection />
       
       {/* CTA Section */}
       <section className="py-20 relative">
