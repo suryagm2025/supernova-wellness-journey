@@ -11,7 +11,8 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarRail,
-  SidebarInset
+  SidebarInset,
+  SidebarTrigger
 } from "@/components/ui/sidebar";
 import Header from './Header';
 import Footer from './Footer';
@@ -127,8 +128,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         <SidebarInset>
           <div className="flex flex-col min-h-screen w-full">
+            <div className="flex items-center md:hidden p-4 z-50 absolute top-0 left-0">
+              <SidebarTrigger />
+            </div>
             <Header />
-            <div className="flex-1 container mx-auto px-4 py-8">
+            <div className="flex-1 container mx-auto px-4 py-8 mt-16">
               {children}
             </div>
             <Footer />

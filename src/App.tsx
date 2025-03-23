@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/layout/Layout";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CheckIn from "./pages/CheckIn";
@@ -28,17 +29,17 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/checkin" element={<CheckIn />} />
-          <Route path="/water" element={<WaterIntake />} />
-          <Route path="/meals" element={<MealLog />} />
-          <Route path="/activity" element={<Activity />} />
-          <Route path="/evening" element={<EveningCheck />} />
-          <Route path="/suggestions" element={<Suggestions />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/programs" element={<Programs />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/checkin" element={<Layout><CheckIn /></Layout>} />
+          <Route path="/water" element={<Layout><WaterIntake /></Layout>} />
+          <Route path="/meals" element={<Layout><MealLog /></Layout>} />
+          <Route path="/activity" element={<Layout><Activity /></Layout>} />
+          <Route path="/evening" element={<Layout><EveningCheck /></Layout>} />
+          <Route path="/suggestions" element={<Layout><Suggestions /></Layout>} />
+          <Route path="/account" element={<Layout><Account /></Layout>} />
+          <Route path="/settings" element={<Layout><Settings /></Layout>} />
+          <Route path="/programs" element={<Layout><Programs /></Layout>} />
+          <Route path="/blog" element={<Layout><Blog /></Layout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
