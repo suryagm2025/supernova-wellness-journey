@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
       <div className="prose prose-invert max-w-none">
         <h2>1. Introduction</h2>
         <p>
-          Welcome to SuperiNova AI. We respect your privacy and are committed to protecting your personal data. 
+          Welcome to SUPERINOVA AI. We respect your privacy and are committed to protecting your personal data. 
           This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.
         </p>
         

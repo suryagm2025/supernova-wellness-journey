@@ -21,12 +21,12 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', withText = true }) => {
     >
       <img 
         src="/lovable-uploads/ca833c22-f00c-4c1c-8afb-04cb6dacfe6f.png" 
-        alt="SuperinovaAI" 
+        alt="SUPERINOVA AI" 
         className={`${sizeClasses[size]} w-auto object-contain`} 
       />
       {withText && (
         <span className="font-display font-bold text-white text-xl tracking-wider">
-          SUPERNOVA<span className="text-supernova-blue">AI</span>
+          SUPERINOVA<span className="text-supernova-blue">AI</span>
         </span>
       )}
     </Link>

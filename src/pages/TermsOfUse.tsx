@@ -11,8 +11,8 @@ const TermsOfUse = () => {
       <div className="prose prose-invert max-w-none">
         <h2>1. Agreement to Terms</h2>
         <p>
-          Welcome to SuperiNova AI. These Terms of Use constitute a legally binding agreement made between you and 
-          SuperiNova AI, concerning your access to and use of our website and mobile application.
+          Welcome to SUPERINOVA AI. These Terms of Use constitute a legally binding agreement made between you and 
+          SUPERINOVA AI, concerning your access to and use of our website and mobile application.
         </p>
         <p>
           By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of these 

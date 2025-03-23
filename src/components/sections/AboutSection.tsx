@@ -9,13 +9,13 @@ const AboutSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-in">
             <h2 className="font-display text-4xl mb-8 leading-tight">
-              About <span className="text-gradient">SuperNova</span>
+              About <span className="text-gradient">SUPERINOVA</span>
             </h2>
             <div className="space-y-6">
               <div>
                 <h3 className="text-2xl font-serif mb-4 text-supernova-blue">Our Mission</h3>
                 <p className="text-gray-300 font-serif leading-relaxed">
-                  At SuperNova, we're dedicated to empowering individuals on their journey toward holistic wellness. 
+                  At SUPERINOVA AI, we're dedicated to empowering individuals on their journey toward holistic wellness. 
                   We combine cutting-edge AI technology with evidence-based wellness practices to create personalized 
                   experiences that adapt to your unique needs and goals.
                 </p>
@@ -25,7 +25,7 @@ const AboutSection: React.FC = () => {
                 <h3 className="text-2xl font-serif mb-4 text-supernova-purple">Our Vision</h3>
                 <p className="text-gray-300 font-serif leading-relaxed">
                   We envision a world where technology enhances human wellness rather than detracting from it. 
-                  SuperNova aims to be the bridge between technological innovation and natural well-being, 
+                  SUPERINOVA AI aims to be the bridge between technological innovation and natural well-being, 
                   helping you create sustainable habits that lead to lasting health and happiness.
                 </p>
               </div>

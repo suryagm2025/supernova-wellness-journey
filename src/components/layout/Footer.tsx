@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../ui/Logo';
@@ -11,7 +10,7 @@ const Footer = () => {
           <div>
             <Logo size="md" />
             <p className="mt-4 text-gray-400 text-sm">
-              Elevate your wellness journey with SuperiNova AI's personalized insights and tracking.
+              Elevate your wellness journey with SUPERINOVA AI's personalized insights and tracking.
             </p>
           </div>
           
@@ -46,7 +45,7 @@ const Footer = () => {
         
         <div className="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SuperiNova AI. All rights reserved.
+            &copy; {new Date().getFullYear()} SUPERINOVA AI. All rights reserved.
           </p>
           
           <div className="flex space-x-4">

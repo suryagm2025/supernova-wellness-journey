@@ -12,7 +12,7 @@ const FAQ = () => {
   return (
     <div className="container max-w-3xl mx-auto py-12">
       <h1 className="text-4xl font-display mb-2">Frequently Asked Questions</h1>
-      <p className="text-gray-400 mb-8">Find answers to common questions about SuperiNova AI</p>
+      <p className="text-gray-400 mb-8">Find answers to common questions about SUPERINOVA AI</p>
       
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1" className="border-white/10">
