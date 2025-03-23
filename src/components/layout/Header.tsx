@@ -3,10 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../ui/Logo';
 import { Menu, X, Moon, Sun, User, Settings, Bell } from 'lucide-react';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -22,6 +30,34 @@ const Header: React.FC = () => {
     return location.pathname === path;
   };
 
+  const notifications = [
+    {
+      id: 1,
+      type: 'suggestion',
+      title: 'AI Suggestion',
+      message: 'Take a 5-minute walk',
+      isRead: false
+    },
+    {
+      id: 2,
+      type: 'reminder',
+      title: 'Reminder',
+      message: 'You haven\'t logged lunch',
+      isRead: false
+    },
+    {
+      id: 3,
+      type: 'insight',
+      title: 'New Insight',
+      message: 'You slept 2hrs better this week',
+      isRead: true
+    }
+  ];
+
+  const markAsRead = () => {
+    setHasUnread(false);
+  };
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -30,7 +66,10 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Logo size="md" />
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="md:hidden" />
+            <Logo size="md" className="md:hidden" />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -49,17 +88,47 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Desktop Action Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-              <Bell size={20} />
-            </button>
-            <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+          <div className="flex items-center space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
+                  <Bell size={20} />
+                  {hasUnread && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80" onClick={markAsRead}>
+                <div className="py-2 px-4 border-b border-border">
+                  <h3 className="font-semibold">Notifications</h3>
+                </div>
+                {notifications.map((notification) => (
+                  <DropdownMenuItem key={notification.id} className="p-3 cursor-default flex flex-col items-start">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium text-sm">{notification.title}</span>
+                      {!notification.isRead && (
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                      )}
+                    </div>
+                    <span className="text-sm text-muted-foreground">{notification.message}</span>
+                  </DropdownMenuItem>
+                ))}
+                <div className="py-2 px-4 border-t border-border">
+                  <Link to="/notifications" className="text-sm text-center block w-full text-supernova-blue">
+                    View all notifications
+                  </Link>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Link to="/settings" className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
               <Settings size={20} />
-            </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
+            </Link>
+            
+            <Link to="/account" className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
               <User size={16} />
               <span className="text-sm font-medium">Account</span>
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,16 +175,19 @@ const Header: React.FC = () => {
                 Insights
               </Link>
               <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
                   <Bell size={20} />
+                  {hasUnread && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  )}
                 </button>
-                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                <Link to="/settings" className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
                   <Settings size={20} />
-                </button>
-                <button className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
+                </Link>
+                <Link to="/account" className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
                   <User size={16} />
                   <span className="text-sm font-medium">Account</span>
-                </button>
+                </Link>
               </div>
             </nav>
           </div>

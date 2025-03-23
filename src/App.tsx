@@ -13,6 +13,10 @@ import Activity from "./pages/Activity";
 import EveningCheck from "./pages/EveningCheck";
 import Suggestions from "./pages/Suggestions";
 import NotFound from "./pages/NotFound";
+import Account from "./pages/Account";
+import Settings from "./pages/Settings";
+import Programs from "./pages/Programs";
+import Blog from "./pages/Blog";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,10 @@ const App = () => (
           <Route path="/activity" element={<Activity />} />
           <Route path="/evening" element={<EveningCheck />} />
           <Route path="/suggestions" element={<Suggestions />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
