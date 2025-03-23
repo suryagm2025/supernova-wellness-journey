@@ -68,7 +68,9 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="md:hidden" />
-            <Logo size="md" className="md:hidden" />
+            <div className="md:hidden">
+              <Logo size="md" />
+            </div>
           </div>
 
           {/* Desktop Navigation */}

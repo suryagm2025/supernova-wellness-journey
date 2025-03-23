@@ -16,7 +16,7 @@ import {
 import Header from './Header';
 import Footer from './Footer';
 import { LayoutDashboard, BookText, UserRound, Settings as SettingsIcon, LogOut, LineChart } from 'lucide-react';
-import { Logo } from '@/components/ui/Logo';
+import Logo from '@/components/ui/Logo';
 
 interface LayoutProps {
   children: React.ReactNode;
