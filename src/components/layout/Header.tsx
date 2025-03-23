@@ -1,65 +1,51 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../ui/Logo';
-import { Menu, X, Moon, Sun, User, Settings, Bell } from 'lucide-react';
-import { 
+import { Button } from '@/components/ui/button';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Bell } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const location = useLocation();
 
+  // Check if we're on the home page
+  const isHomePage = location.pathname === '/';
+
+  // Check if we're on public pages like login/signup
+  const isPublicPage = ['/login', '/signup', '/forgot-password'].includes(location.pathname);
+
+  // Handle scroll events
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isLinkActive = (path: string) => {
+  // Check if a nav link is active
+  const isActive = (path: string) => {
     return location.pathname === path;
   };
 
-  const notifications = [
-    {
-      id: 1,
-      type: 'suggestion',
-      title: 'AI Suggestion',
-      message: 'Take a 5-minute walk',
-      isRead: false
-    },
-    {
-      id: 2,
-      type: 'reminder',
-      title: 'Reminder',
-      message: 'You haven\'t logged lunch',
-      isRead: false
-    },
-    {
-      id: 3,
-      type: 'insight',
-      title: 'New Insight',
-      message: 'You slept 2hrs better this week',
-      isRead: true
-    }
-  ];
-
-  const markAsRead = () => {
-    setHasUnread(false);
-  };
+  // Only show auth status and notification bell on dashboard pages
+  const isOnDashboard = !isHomePage && !isPublicPage;
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/40 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        isScrolled || !isHomePage 
+          ? 'bg-supernova-dark/80 backdrop-blur-md border-b border-white/5 py-2' 
+          : 'bg-transparent py-4'
       }`}
     >
       <div className="container mx-auto px-4 py-4">
@@ -68,130 +54,118 @@ const Header: React.FC = () => {
             <div className="md:hidden">
               <Logo size="md" />
             </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className={`nav-link ${isLinkActive('/') ? 'active' : ''}`}>
-              Home
-            </Link>
-            <Link to="/dashboard" className={`nav-link ${isLinkActive('/dashboard') ? 'active' : ''}`}>
-              Dashboard
-            </Link>
-            <Link to="/checkin" className={`nav-link ${isLinkActive('/checkin') ? 'active' : ''}`}>
-              Check-in
-            </Link>
-            <Link to="/suggestions" className={`nav-link ${isLinkActive('/suggestions') ? 'active' : ''}`}>
-              Insights
-            </Link>
-          </nav>
-
-          {/* Desktop Action Buttons */}
-          <div className="flex items-center space-x-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
-                  <Bell size={20} />
-                  {hasUnread && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                  )}
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80" onClick={markAsRead}>
-                <div className="py-2 px-4 border-b border-border">
-                  <h3 className="font-semibold">Notifications</h3>
-                </div>
-                {notifications.map((notification) => (
-                  <DropdownMenuItem key={notification.id} className="p-3 cursor-default flex flex-col items-start">
-                    <div className="flex items-center justify-between w-full">
-                      <span className="font-medium text-sm">{notification.title}</span>
-                      {!notification.isRead && (
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                      )}
-                    </div>
-                    <span className="text-sm text-muted-foreground">{notification.message}</span>
-                  </DropdownMenuItem>
-                ))}
-                <div className="py-2 px-4 border-t border-border">
-                  <Link to="/notifications" className="text-sm text-center block w-full text-supernova-blue">
-                    View all notifications
-                  </Link>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Link to="/settings" className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-              <Settings size={20} />
-            </Link>
+            <div className="hidden md:block">
+              <Logo size="md" withText={true} />
+            </div>
             
-            <Link to="/account" className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
-              <User size={16} />
-              <span className="text-sm font-medium">Account</span>
-            </Link>
+            {!isPublicPage && (
+              <nav className="hidden md:flex ml-10 space-x-6">
+                <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
+                  Home
+                </Link>
+                <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
+                  Dashboard
+                </Link>
+                <Link to="/programs" className={`nav-link ${isActive('/programs') ? 'active' : ''}`}>
+                  Programs
+                </Link>
+                <Link to="/blog" className={`nav-link ${isActive('/blog') ? 'active' : ''}`}>
+                  Blog
+                </Link>
+                <Link to="/faq" className={`nav-link ${isActive('/faq') ? 'active' : ''}`}>
+                  FAQ
+                </Link>
+              </nav>
+            )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center space-x-4">
+            {isOnDashboard ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative">
+                      <Bell className="h-5 w-5" />
+                      {hasUnread && (
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <div className="p-2 text-xs font-medium text-muted-foreground">
+                      Notifications
+                    </div>
+                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-white/5" onClick={() => setHasUnread(false)}>
+                      <div className="flex items-center w-full">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-supernova-blue/20 flex items-center justify-center mr-3">
+                          <span className="text-supernova-blue text-sm">AI</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">AI Suggestion</p>
+                          <p className="text-gray-400 text-xs">Take a 5-minute walk</p>
+                        </div>
+                        <div className="text-xs text-gray-500">now</div>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-white/5">
+                      <div className="flex items-center w-full">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                          <span className="text-yellow-400 text-sm">R</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">Reminder</p>
+                          <p className="text-gray-400 text-xs">You haven't logged lunch</p>
+                        </div>
+                        <div className="text-xs text-gray-500">2h ago</div>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal">
+                      <div className="flex items-center w-full">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                          <span className="text-green-400 text-sm">I</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">New Insight</p>
+                          <p className="text-gray-400 text-xs">You slept 2hrs better this week</p>
+                        </div>
+                        <div className="text-xs text-gray-500">1d ago</div>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Link to="/account">
+                  <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-white/10">
+                    <span className="sr-only">User account</span>
+                    <span className="text-sm font-medium">LS</span>
+                  </Button>
+                </Link>
+              </>
+            ) : isPublicPage ? (
+              <>
+                {location.pathname !== '/login' && (
+                  <Link to="/login">
+                    <Button variant="ghost">Log In</Button>
+                  </Link>
+                )}
+                {location.pathname !== '/signup' && (
+                  <Link to="/signup">
+                    <Button className="cosmic-glow-blue">Sign Up</Button>
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost">Log In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="cosmic-glow-blue">Sign Up</Button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-supernova-dark/95 backdrop-blur-lg border-t border-white/10 animate-fade-in">
-          <div className="container mx-auto px-4 py-4">
-            <nav className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className={`nav-link text-lg ${isLinkActive('/') ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/dashboard" 
-                className={`nav-link text-lg ${isLinkActive('/dashboard') ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Dashboard
-              </Link>
-              <Link 
-                to="/checkin" 
-                className={`nav-link text-lg ${isLinkActive('/checkin') ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Check-in
-              </Link>
-              <Link 
-                to="/suggestions" 
-                className={`nav-link text-lg ${isLinkActive('/suggestions') ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Insights
-              </Link>
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <button className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors relative">
-                  <Bell size={20} />
-                  {hasUnread && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                  )}
-                </button>
-                <Link to="/settings" className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
-                  <Settings size={20} />
-                </Link>
-                <Link to="/account" className="flex items-center space-x-2 px-4 py-2 bg-supernova-blue/20 hover:bg-supernova-blue/30 border border-supernova-blue/30 rounded-full text-supernova-blue transition-colors duration-300">
-                  <User size={16} />
-                  <span className="text-sm font-medium">Account</span>
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
