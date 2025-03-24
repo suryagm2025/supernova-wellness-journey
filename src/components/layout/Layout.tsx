@@ -133,9 +133,9 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
               <SidebarTrigger />
             </div>
             <Header />
-            <div className="flex-1 container mx-auto px-4 py-8 mt-16">
+            <main className="flex-1 container mx-auto px-4 py-8 mt-16">
               {children}
-            </div>
+            </main>
             {!hideFooter && <Footer />}
           </div>
         </SidebarInset>
