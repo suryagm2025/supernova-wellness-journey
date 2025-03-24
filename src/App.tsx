@@ -38,20 +38,20 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
-          <Route path="/checkin" element={<Layout><CheckIn /></Layout>} />
-          <Route path="/water" element={<Layout><WaterIntake /></Layout>} />
-          <Route path="/meals" element={<Layout><MealLog /></Layout>} />
-          <Route path="/activity" element={<Layout><Activity /></Layout>} />
-          <Route path="/evening" element={<Layout><EveningCheck /></Layout>} />
-          <Route path="/suggestions" element={<Layout><Suggestions /></Layout>} />
-          <Route path="/account" element={<Layout><Account /></Layout>} />
-          <Route path="/settings" element={<Layout><Settings /></Layout>} />
-          <Route path="/programs" element={<Layout><Programs /></Layout>} />
-          <Route path="/blog" element={<Layout><Blog /></Layout>} />
-          <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-          <Route path="/privacy" element={<Layout><PrivacyPolicy /></Layout>} />
-          <Route path="/terms" element={<Layout><TermsOfUse /></Layout>} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/checkin" element={<CheckIn />} />
+          <Route path="/water" element={<WaterIntake />} />
+          <Route path="/meals" element={<MealLog />} />
+          <Route path="/activity" element={<Activity />} />
+          <Route path="/evening" element={<EveningCheck />} />
+          <Route path="/suggestions" element={<Suggestions />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfUse />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
