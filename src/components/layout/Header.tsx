@@ -44,8 +44,8 @@ const Header: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled || !isHomePage 
-          ? 'bg-supernova-dark/80 backdrop-blur-md border-b border-white/5 py-2' 
-          : 'bg-transparent py-4'
+          ? 'bg-[#0E0E12]/90 backdrop-blur-md border-b border-[#2A2A30] py-2 shadow-md' 
+          : 'bg-gradient-to-b from-[rgba(14,14,18,0.6)] to-transparent py-4'
       }`}
     >
       <div className="container mx-auto px-4 py-4">
@@ -84,39 +84,39 @@ const Header: React.FC = () => {
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="relative">
+                    <Button variant="ghost" size="icon" className="relative text-white">
                       <Bell className="h-5 w-5" />
                       {hasUnread && (
                         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-80">
-                    <div className="p-2 text-xs font-medium text-muted-foreground">
+                  <DropdownMenuContent align="end" className="w-80 bg-[#1A1A20] border border-[#2A2A30]">
+                    <div className="p-2 text-xs font-medium text-[#B0B0C3]">
                       Notifications
                     </div>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-white/5" onClick={() => setHasUnread(false)}>
+                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-[#2A2A30]" onClick={() => setHasUnread(false)}>
                       <div className="flex items-center w-full">
                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-supernova-blue/20 flex items-center justify-center mr-3">
                           <span className="text-supernova-blue text-sm">AI</span>
                         </div>
                         <div className="flex-1">
                           <p className="text-white text-sm">AI Suggestion</p>
-                          <p className="text-gray-400 text-xs">Take a 5-minute walk</p>
+                          <p className="text-[#B0B0C3] text-xs">Take a 5-minute walk</p>
                         </div>
-                        <div className="text-xs text-gray-500">now</div>
+                        <div className="text-xs text-[#B0B0C3]">now</div>
                       </div>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-white/5">
+                    <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal border-b border-[#2A2A30]">
                       <div className="flex items-center w-full">
                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
                           <span className="text-yellow-400 text-sm">R</span>
                         </div>
                         <div className="flex-1">
                           <p className="text-white text-sm">Reminder</p>
-                          <p className="text-gray-400 text-xs">You haven't logged lunch</p>
+                          <p className="text-[#B0B0C3] text-xs">You haven't logged lunch</p>
                         </div>
-                        <div className="text-xs text-gray-500">2h ago</div>
+                        <div className="text-xs text-[#B0B0C3]">2h ago</div>
                       </div>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="p-3 cursor-pointer hover:bg-white/5 flex flex-col items-start font-normal">
@@ -126,15 +126,15 @@ const Header: React.FC = () => {
                         </div>
                         <div className="flex-1">
                           <p className="text-white text-sm">New Insight</p>
-                          <p className="text-gray-400 text-xs">You slept 2hrs better this week</p>
+                          <p className="text-[#B0B0C3] text-xs">You slept 2hrs better this week</p>
                         </div>
-                        <div className="text-xs text-gray-500">1d ago</div>
+                        <div className="text-xs text-[#B0B0C3]">1d ago</div>
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <Link to="/account">
-                  <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-white/10">
+                  <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-[#2A2A30] text-white">
                     <span className="sr-only">User account</span>
                     <span className="text-sm font-medium">LS</span>
                   </Button>
@@ -144,22 +144,22 @@ const Header: React.FC = () => {
               <>
                 {location.pathname !== '/login' && (
                   <Link to="/login">
-                    <Button variant="ghost">Log In</Button>
+                    <Button variant="ghost" className="text-white hover:text-white">Log In</Button>
                   </Link>
                 )}
                 {location.pathname !== '/signup' && (
                   <Link to="/signup">
-                    <Button className="cosmic-glow-blue">Sign Up</Button>
+                    <Button className="bg-[#6C63FF] hover:bg-[#2CD4D9] text-white font-bold min-h-[44px]">Sign Up</Button>
                   </Link>
                 )}
               </>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost">Log In</Button>
+                  <Button variant="ghost" className="text-white hover:text-white">Log In</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="cosmic-glow-blue">Sign Up</Button>
+                  <Button className="bg-[#6C63FF] hover:bg-[#2CD4D9] text-white font-bold min-h-[44px]">Sign Up</Button>
                 </Link>
               </>
             )}

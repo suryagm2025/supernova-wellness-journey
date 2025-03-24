@@ -21,9 +21,10 @@ import Logo from '@/components/ui/Logo';
 
 interface LayoutProps {
   children: React.ReactNode;
+  hideFooter?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
   const location = useLocation();
   
   const isActive = (path: string) => {
@@ -135,7 +136,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex-1 container mx-auto px-4 py-8 mt-16">
               {children}
             </div>
-            <Footer />
+            {!hideFooter && <Footer />}
           </div>
         </SidebarInset>
       </div>

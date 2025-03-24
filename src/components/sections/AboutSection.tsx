@@ -14,7 +14,7 @@ const AboutSection: React.FC = () => {
             <div className="space-y-6">
               <div>
                 <h3 className="text-2xl font-serif mb-4 text-supernova-blue">Our Mission</h3>
-                <p className="text-gray-300 font-serif leading-relaxed">
+                <p className="text-[#B0B0C3] font-serif leading-relaxed">
                   At SUPERINOVA AI, we're dedicated to empowering individuals on their journey toward holistic wellness. 
                   We combine cutting-edge AI technology with evidence-based wellness practices to create personalized 
                   experiences that adapt to your unique needs and goals.
@@ -23,7 +23,7 @@ const AboutSection: React.FC = () => {
               
               <div>
                 <h3 className="text-2xl font-serif mb-4 text-supernova-purple">Our Vision</h3>
-                <p className="text-gray-300 font-serif leading-relaxed">
+                <p className="text-[#B0B0C3] font-serif leading-relaxed">
                   We envision a world where technology enhances human wellness rather than detracting from it. 
                   SUPERINOVA AI aims to be the bridge between technological innovation and natural well-being, 
                   helping you create sustainable habits that lead to lasting health and happiness.
