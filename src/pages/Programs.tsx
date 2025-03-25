@@ -11,7 +11,7 @@ const Programs = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-12 max-w-4xl mx-auto text-center px-4">
           <h1 className="text-3xl md:text-5xl font-bold mb-6">
-            Supernova <span className="text-gradient">Wellness Programs</span>
+            SuperiNova AI <span className="text-gradient">Wellness Programs</span>
           </h1>
           <p className="text-gray-300 text-lg mb-8">
             Discover personalized wellness programs designed to fit your unique needs and lifestyle.

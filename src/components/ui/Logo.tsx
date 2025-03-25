@@ -26,7 +26,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', withText = true }) => {
       />
       {withText && (
         <span className="font-display font-bold text-white text-xl tracking-wider drop-shadow-sm">
-          SUPERINOVA<span className="text-supernova-blue">AI</span>
+          SUPERI<span className="text-supernova-blue">NOVA AI</span>
         </span>
       )}
     </Link>
