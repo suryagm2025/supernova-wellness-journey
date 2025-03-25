@@ -11,27 +11,71 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          age: number | null
           avatar_url: string | null
           created_at: string | null
+          email: string | null
           full_name: string | null
+          gender: string | null
           id: string
+          preferences: Json | null
           username: string | null
         }
         Insert: {
+          age?: number | null
           avatar_url?: string | null
           created_at?: string | null
+          email?: string | null
           full_name?: string | null
+          gender?: string | null
           id: string
+          preferences?: Json | null
           username?: string | null
         }
         Update: {
+          age?: number | null
           avatar_url?: string | null
           created_at?: string | null
+          email?: string | null
           full_name?: string | null
+          gender?: string | null
           id?: string
+          preferences?: Json | null
           username?: string | null
         }
         Relationships: []
+      }
+      progress_tracking: {
+        Row: {
+          created_at: string
+          daily_summary: string | null
+          goals_met: Json | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_summary?: string | null
+          goals_met?: Json | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_summary?: string | null
+          goals_met?: Json | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_tracking_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wellness_activities: {
         Row: {
@@ -74,6 +118,111 @@ export type Database = {
           },
           {
             foreignKeyName: "wellness_activities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wellness_circle_members: {
+        Row: {
+          accepted: boolean | null
+          circle_id: string
+          created_at: string
+          id: string
+          invited_by: string | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          accepted?: boolean | null
+          circle_id: string
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          role: string
+          user_id: string
+        }
+        Update: {
+          accepted?: boolean | null
+          circle_id?: string
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wellness_circle_members_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "wellness_circles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wellness_circle_members_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wellness_circle_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wellness_circles: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      wellness_entries: {
+        Row: {
+          created_at: string
+          id: string
+          type: string
+          user_id: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          type: string
+          user_id: string
+          value: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          type?: string
+          user_id?: string
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wellness_entries_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"

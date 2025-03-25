@@ -40,31 +40,37 @@ const App = () => (
           <Toaster />
           <Sonner />
           <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsOfUse />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            {/* Public routes with layout */}
+            <Route element={<Layout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfUse />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+            </Route>
             
-            {/* Protected routes */}
+            {/* Auth callback doesn't need the layout */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            
+            {/* Protected routes with layout */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/checkin" element={<CheckIn />} />
-              <Route path="/water" element={<WaterIntake />} />
-              <Route path="/meals" element={<MealLog />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/evening" element={<EveningCheck />} />
-              <Route path="/suggestions" element={<Suggestions />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/blog" element={<Blog />} />
+              <Route element={<Layout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/checkin" element={<CheckIn />} />
+                <Route path="/water" element={<WaterIntake />} />
+                <Route path="/meals" element={<MealLog />} />
+                <Route path="/activity" element={<Activity />} />
+                <Route path="/evening" element={<EveningCheck />} />
+                <Route path="/suggestions" element={<Suggestions />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/programs" element={<Programs />} />
+                <Route path="/blog" element={<Blog />} />
+              </Route>
             </Route>
             
             {/* Fallback route */}
