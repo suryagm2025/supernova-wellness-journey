@@ -84,7 +84,7 @@ serve(async (req) => {
 });
 
 // Generate basic rule-based suggestions
-function generateBasicSuggestions(entries: any[]) {
+function generateBasicSuggestions(entries) {
   const suggestions = [];
   
   // Group entries by type
@@ -145,7 +145,7 @@ function generateBasicSuggestions(entries: any[]) {
 }
 
 // Generate AI-powered personalized suggestions
-async function generateAISuggestions(profile: any, entries: any[], basicSuggestions: any[]) {
+async function generateAISuggestions(profile, entries, basicSuggestions) {
   try {
     // Prepare data for OpenAI
     const userData = {
