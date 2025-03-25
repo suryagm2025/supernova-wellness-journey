@@ -5,6 +5,7 @@ import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { Droplet, PlusCircle, MinusCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import VoiceInput from '../components/VoiceInput';
 
 const WaterIntake = () => {
   const [waterAmount, setWaterAmount] = useState('');
@@ -43,6 +44,18 @@ const WaterIntake = () => {
     } else {
       toast.error('Unable to understand the amount. Try "2 glasses" or "500ml"');
     }
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    // Process voice input to extract water amount
+    setWaterAmount(transcript);
+    // Auto-submit after a short delay if we have a voice input
+    setTimeout(() => {
+      const form = document.getElementById('water-form') as HTMLFormElement;
+      if (form && transcript) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    }, 1000);
   };
 
   const adjustWater = (increment: number) => {
@@ -119,7 +132,15 @@ const WaterIntake = () => {
             <GlassMorphicCard className="p-6">
               <h3 className="text-xl font-display font-semibold mb-6">Log Water Intake</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Voice Input */}
+              <div className="mb-6">
+                <VoiceInput 
+                  onTranscript={handleVoiceInput} 
+                  placeholder="Click the mic and say 'I drank 2 glasses of water'"
+                />
+              </div>
+              
+              <form id="water-form" onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="block text-sm text-gray-300">
                     How much water have you had?

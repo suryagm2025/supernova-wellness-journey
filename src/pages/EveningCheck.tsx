@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
-import { MoonStar, Clock, Smartphone, Heart } from 'lucide-react';
+import { MoonStar, Clock, Smartphone, Heart, Mic } from 'lucide-react';
 import { toast } from 'sonner';
+import VoiceInput from '../components/VoiceInput';
 
 const EveningCheck = () => {
   const [sleepTime, setSleepTime] = useState('');
   const [screenTime, setScreenTime] = useState('');
   const [gratitude, setGratitude] = useState('');
+  const [activeVoiceField, setActiveVoiceField] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,19 @@ const EveningCheck = () => {
     setSleepTime('');
     setScreenTime('');
     setGratitude('');
+  };
+
+  const handleVoiceInput = (transcript: string) => {
+    if (activeVoiceField === 'sleepTime') {
+      setSleepTime(transcript);
+    } else if (activeVoiceField === 'screenTime') {
+      setScreenTime(transcript);
+    } else if (activeVoiceField === 'gratitude') {
+      setGratitude(transcript);
+    }
+    
+    // Reset after receiving input
+    setActiveVoiceField(null);
   };
 
   return (
@@ -51,12 +66,32 @@ const EveningCheck = () => {
               Evening Reflection
             </h3>
             
+            {activeVoiceField && (
+              <div className="mb-6">
+                <VoiceInput 
+                  onTranscript={handleVoiceInput}
+                  placeholder={`Speak to fill the ${activeVoiceField === 'sleepTime' ? 'sleep time' : 
+                    activeVoiceField === 'screenTime' ? 'screen time' : 'gratitude'} field`}
+                />
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm text-gray-300 flex items-center">
-                  <Clock size={16} className="mr-2 text-gray-400" />
-                  What time do you plan to sleep?
-                </label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-sm text-gray-300 flex items-center">
+                    <Clock size={16} className="mr-2 text-gray-400" />
+                    What time do you plan to sleep?
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setActiveVoiceField('sleepTime')}
+                    className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
+                    aria-label="Use voice input for sleep time"
+                  >
+                    <Mic size={14} />
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={sleepTime}
@@ -67,10 +102,20 @@ const EveningCheck = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="block text-sm text-gray-300 flex items-center">
-                  <Smartphone size={16} className="mr-2 text-gray-400" />
-                  Any screen time or late snacking?
-                </label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-sm text-gray-300 flex items-center">
+                    <Smartphone size={16} className="mr-2 text-gray-400" />
+                    Any screen time or late snacking?
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setActiveVoiceField('screenTime')}
+                    className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
+                    aria-label="Use voice input for screen time"
+                  >
+                    <Mic size={14} />
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={screenTime}
@@ -81,10 +126,20 @@ const EveningCheck = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="block text-sm text-gray-300 flex items-center">
-                  <Heart size={16} className="mr-2 text-gray-400" />
-                  One thing you're grateful for today?
-                </label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-sm text-gray-300 flex items-center">
+                    <Heart size={16} className="mr-2 text-gray-400" />
+                    One thing you're grateful for today?
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setActiveVoiceField('gratitude')}
+                    className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
+                    aria-label="Use voice input for gratitude"
+                  >
+                    <Mic size={14} />
+                  </button>
+                </div>
                 <textarea
                   value={gratitude}
                   onChange={(e) => setGratitude(e.target.value)}
@@ -105,7 +160,7 @@ const EveningCheck = () => {
             
             <div className="mt-6 bg-white/5 rounded-lg p-4 border border-white/10">
               <p className="text-gray-400 text-sm">
-                <span className="text-supernova-pink">Example:</span> "Sleep at 10:30, no phone after 9, grateful for good weather."
+                <span className="text-supernova-pink">Tip:</span> Try using voice input by clicking the microphone icons next to each field.
               </p>
             </div>
           </GlassMorphicCard>

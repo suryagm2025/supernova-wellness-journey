@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import GlassMorphicCard from '../ui/GlassMorphicCard';
 import SuggestedActivities, { getDefaultSuggestedActivities } from './SuggestedActivities';
 import ActivityForm from './ActivityForm';
@@ -21,6 +21,7 @@ const ActivityLoggingCard: React.FC<ActivityLoggingCardProps> = ({
   handleSubmit,
 }) => {
   const suggestedActivities = getDefaultSuggestedActivities();
+  const [showVoiceInput, setShowVoiceInput] = useState(false);
 
   const handleSelectActivity = (title: string) => {
     if (title) {
@@ -30,6 +31,10 @@ const ActivityLoggingCard: React.FC<ActivityLoggingCardProps> = ({
     } else {
       setSuggestMode(false);
     }
+  };
+
+  const toggleVoiceInput = () => {
+    setShowVoiceInput(prev => !prev);
   };
 
   return (
@@ -45,6 +50,8 @@ const ActivityLoggingCard: React.FC<ActivityLoggingCardProps> = ({
           onDescriptionChange={setActivityDescription}
           onSubmit={handleSubmit}
           onSuggestMode={() => setSuggestMode(true)}
+          showVoiceInput={showVoiceInput}
+          onToggleVoiceInput={toggleVoiceInput}
         />
       )}
       
