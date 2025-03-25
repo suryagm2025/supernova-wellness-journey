@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,13 +8,22 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from 'sonner';
 import Logo from '@/components/ui/Logo';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { signUp, signInWithGoogle, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,14 +33,30 @@ const Signup = () => {
       return;
     }
     
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    
     setIsLoading(true);
     
-    // Simulate signup - replace with actual authentication
-    setTimeout(() => {
+    try {
+      await signUp(email, password, { full_name: name });
+      // Further handling in AuthContext
+    } catch (error) {
+      // Error handling in AuthContext
+    } finally {
       setIsLoading(false);
-      toast.success('Account created successfully!');
-      navigate('/dashboard');
-    }, 1500);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await signInWithGoogle();
+      // Redirection handled by Google OAuth flow
+    } catch (error) {
+      // Error handling done in AuthContext
+    }
   };
 
   return (
@@ -98,7 +123,7 @@ const Signup = () => {
                     autoComplete="new-password"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
+                <p className="text-xs text-muted-foreground">Must be at least 6 characters</p>
               </div>
               
               <Button 
@@ -121,7 +146,12 @@ const Signup = () => {
                 </div>
               </div>
               
-              <Button variant="outline" className="w-full mt-4">
+              <Button 
+                variant="outline" 
+                className="w-full mt-4" 
+                onClick={handleGoogleSignup}
+                type="button"
+              >
                 <img src="/google.svg" alt="Google" className="h-4 w-4 mr-2" />
                 Google
               </Button>

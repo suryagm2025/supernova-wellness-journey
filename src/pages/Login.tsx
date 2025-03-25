@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,12 +8,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from 'sonner';
 import Logo from '@/components/ui/Logo';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signInWithGoogle, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +34,22 @@ const Login = () => {
     
     setIsLoading(true);
     
-    // Simulate login - replace with actual authentication
-    setTimeout(() => {
+    try {
+      await signIn(email, password);
+      // Redirection handled by AuthContext
+    } catch (error) {
+      // Error handling done in AuthContext
       setIsLoading(false);
-      toast.success('Successfully logged in!');
-      navigate('/dashboard');
-    }, 1500);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle();
+      // Redirection handled by Google OAuth flow
+    } catch (error) {
+      // Error handling done in AuthContext
+    }
   };
 
   return (
@@ -109,7 +128,12 @@ const Login = () => {
                 </div>
               </div>
               
-              <Button variant="outline" className="w-full mt-4">
+              <Button 
+                variant="outline" 
+                className="w-full mt-4" 
+                onClick={handleGoogleLogin}
+                type="button"
+              >
                 <img src="/google.svg" alt="Google" className="h-4 w-4 mr-2" />
                 Google
               </Button>

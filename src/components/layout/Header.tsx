@@ -9,18 +9,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Bell } from 'lucide-react';
+import { Bell, LogOut, User as UserIcon, Settings } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   // Check if we're on the home page
   const isHomePage = location.pathname === '/';
 
   // Check if we're on public pages like login/signup
-  const isPublicPage = ['/login', '/signup', '/forgot-password'].includes(location.pathname);
+  const isPublicPage = ['/login', '/signup', '/forgot-password', '/reset-password'].includes(location.pathname);
 
   // Handle scroll events
   useEffect(() => {
@@ -39,6 +41,27 @@ const Header: React.FC = () => {
 
   // Only show auth status and notification bell on dashboard pages
   const isOnDashboard = !isHomePage && !isPublicPage;
+  
+  // Handle logout
+  const handleLogout = async () => {
+    await signOut();
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!user) return 'U';
+    
+    const email = user.email || '';
+    if (user.user_metadata && user.user_metadata.full_name) {
+      const names = user.user_metadata.full_name.split(' ');
+      if (names.length >= 2) {
+        return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
+      }
+      return names[0][0].toUpperCase();
+    }
+    
+    return email.substring(0, 2).toUpperCase();
+  };
 
   return (
     <header
@@ -80,7 +103,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {isOnDashboard ? (
+            {user && isOnDashboard ? (
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -133,12 +156,36 @@ const Header: React.FC = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Link to="/account">
-                  <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-[#2A2A30] text-white">
-                    <span className="sr-only">User account</span>
-                    <span className="text-sm font-medium">LS</span>
-                  </Button>
-                </Link>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-[#2A2A30] text-white">
+                      <span className="sr-only">User account</span>
+                      <span className="text-sm font-medium">{getUserInitials()}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-[#1A1A20] border border-[#2A2A30]">
+                    <DropdownMenuItem asChild className="p-3 cursor-pointer hover:bg-white/5">
+                      <Link to="/account" className="flex items-center">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>My Account</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="p-3 cursor-pointer hover:bg-white/5">
+                      <Link to="/settings" className="flex items-center">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      className="p-3 cursor-pointer hover:bg-white/5 text-red-400"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : isPublicPage ? (
               <>
@@ -155,12 +202,25 @@ const Header: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/login">
-                  <Button variant="ghost" className="text-white hover:text-white">Log In</Button>
-                </Link>
-                <Link to="/signup">
-                  <Button className="bg-[#6C63FF] hover:bg-[#2CD4D9] text-white font-bold min-h-[44px]">Sign Up</Button>
-                </Link>
+                {user ? (
+                  <Button 
+                    variant="ghost" 
+                    className="text-white hover:text-white flex items-center"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Log Out
+                  </Button>
+                ) : (
+                  <>
+                    <Link to="/login">
+                      <Button variant="ghost" className="text-white hover:text-white">Log In</Button>
+                    </Link>
+                    <Link to="/signup">
+                      <Button className="bg-[#6C63FF] hover:bg-[#2CD4D9] text-white font-bold min-h-[44px]">Sign Up</Button>
+                    </Link>
+                  </>
+                )}
               </>
             )}
           </div>
