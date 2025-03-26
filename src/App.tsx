@@ -43,7 +43,7 @@ const queryClient = new QueryClient({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <AuthProvider>
           <Toaster />
           <Sonner />
@@ -63,11 +63,11 @@ const App = () => (
             </Route>
             
             {/* Auth callback doesn't need the layout */}
-            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="auth/callback" element={<AuthCallback />} />
             
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
-              <Route element={<Layout />}>
+              <Route path="/" element={<Layout />}>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="checkin" element={<CheckIn />} />
                 <Route path="water" element={<WaterIntake />} />

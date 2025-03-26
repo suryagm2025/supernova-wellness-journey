@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <Logo size="md" />
             <p className="mt-4 text-[#B0B0C3] text-sm">
-              Elevate your wellness journey with SUPERINOVA AI's personalized insights and tracking.
+              Elevate your wellness journey with SUPERNOVA AI's personalized insights and tracking.
             </p>
           </div>
           
@@ -29,7 +29,7 @@ const Footer = () => {
             <h4 className="text-white font-medium mb-4">Support</h4>
             <ul className="space-y-2">
               <li><Link to="/faq" className="text-[#B0B0C3] hover:text-[#2CD4D9] transition-colors">FAQ</Link></li>
-              <li><a href="mailto:help@superinova.ai" className="text-[#B0B0C3] hover:text-[#2CD4D9] transition-colors">Contact Support</a></li>
+              <li><a href="mailto:help@supernova.ai" className="text-[#B0B0C3] hover:text-[#2CD4D9] transition-colors">Contact Support</a></li>
               <li><Link to="/settings" className="text-[#B0B0C3] hover:text-[#2CD4D9] transition-colors">App Settings</Link></li>
             </ul>
           </div>
@@ -46,7 +46,7 @@ const Footer = () => {
         
         <div className="border-t border-[#2A2A30] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-[#B0B0C3] text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SUPERINOVA AI. All rights reserved.
+            &copy; {new Date().getFullYear()} SUPERNOVA AI. All rights reserved.
           </p>
           
           <div className="flex space-x-4">
