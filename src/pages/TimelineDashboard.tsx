@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ChartLine } from 'lucide-react';
@@ -6,6 +7,7 @@ import TimelineStats from '@/components/timeline/TimelineStats';
 import TimelineInsights from '@/components/timeline/TimelineInsights';
 import TimelineChart from '@/components/timeline/TimelineChart';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
+import VoiceWellnessCompanion from '@/components/voice/VoiceWellnessCompanion';
 import useTimelineData from '@/hooks/useTimelineData';
 
 const TimelineDashboard = () => {
@@ -76,6 +78,12 @@ const TimelineDashboard = () => {
                 </>
               )}
             </GlassMorphicCard>
+          </div>
+          
+          {/* Voice-AI Wellness Companion */}
+          <div className="max-w-5xl mx-auto mb-20">
+            <h2 className="text-xl font-display font-semibold mb-4">Wellness Companion</h2>
+            <VoiceWellnessCompanion />
           </div>
         </div>
       </main>
