@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
+import TimeBasedFlow from "./components/timeflows/TimeBasedFlow";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CheckIn from "./pages/CheckIn";
@@ -39,6 +40,7 @@ const App = () => (
         <AuthProvider>
           <Toaster />
           <Sonner />
+          <TimeBasedFlow />
           <Routes>
             {/* Public routes with layout */}
             <Route element={<Layout />}>
