@@ -32,7 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
   };
 
   // Check if we're on any public page
-  const isPublicPage = ['/', '/login', '/signup', '/forgot-password', '/reset-password', '/faq', '/privacy', '/terms', '/cookie-policy'].includes(location.pathname);
+  const isPublicPage = ['/', '/login', '/signup', '/forgot-password', '/reset-password', '/faq', '/privacy', '/terms', '/cookie-policy', '/streak', '/emotion-check'].includes(location.pathname);
 
   // Only show sidebar on dashboard pages
   const showSidebar = !isPublicPage;

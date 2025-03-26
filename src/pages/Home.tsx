@@ -6,15 +6,12 @@ import FeatureBreakdownSection from '../components/home/FeatureBreakdownSection'
 import TestimonialsSection from '../components/home/TestimonialsSection';
 import ErrorHandlingSection from '../components/home/ErrorHandlingSection';
 import PricingSection from '../components/home/PricingSection';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
+import Layout from '@/components/layout/Layout';
 
 const Home = () => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      
-      <main className="pt-20">
+    <Layout>
+      <div className="min-h-screen pt-20">
         {/* Homepage Sections */}
         <HeroSection />
         <SellingPointsSection />
@@ -22,10 +19,8 @@ const Home = () => {
         <TestimonialsSection />
         <ErrorHandlingSection />
         <PricingSection />
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </Layout>
   );
 };
 
