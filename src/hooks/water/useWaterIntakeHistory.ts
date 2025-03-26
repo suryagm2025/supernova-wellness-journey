@@ -29,6 +29,26 @@ export const useWaterIntakeHistory = ({ userId, onTotalUpdate }: UseWaterIntakeH
     }
   }, [userId, currentPage, timeFilter]);
 
+  const getStartDate = (filter: string): Date => {
+    let startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    
+    switch (filter) {
+      case "week":
+        startDate.setDate(startDate.getDate() - 7);
+        break;
+      case "month":
+        startDate.setMonth(startDate.getMonth() - 1);
+        break;
+      case "all":
+        startDate = new Date(0); // Beginning of time
+        break;
+      // "today" is default, already set
+    }
+    
+    return startDate;
+  };
+
   const fetchWaterIntakeHistory = async () => {
     if (!userId) return;
     
@@ -36,21 +56,7 @@ export const useWaterIntakeHistory = ({ userId, onTotalUpdate }: UseWaterIntakeH
     
     try {
       // Calculate date range based on filter
-      let startDate = new Date();
-      startDate.setHours(0, 0, 0, 0);
-      
-      switch (timeFilter) {
-        case "week":
-          startDate.setDate(startDate.getDate() - 7);
-          break;
-        case "month":
-          startDate.setMonth(startDate.getMonth() - 1);
-          break;
-        case "all":
-          startDate = new Date(0); // Beginning of time
-          break;
-        // "today" is default, already set
-      }
+      const startDate = getStartDate(timeFilter);
       
       // First get count for pagination
       const countQuery = supabase
@@ -111,6 +117,32 @@ export const useWaterIntakeHistory = ({ userId, onTotalUpdate }: UseWaterIntakeH
     }
   };
 
+  const fetchAllHistory = async (): Promise<WaterIntakeEntry[]> => {
+    if (!userId) return [];
+    
+    try {
+      // Calculate date range based on filter
+      const startDate = getStartDate(timeFilter);
+      
+      // Get all data for the current filter without pagination
+      const { data, error } = await supabase
+        .from('water_intake')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('created_at', startDate.toISOString())
+        .order('created_at', { ascending: false });
+        
+      if (error) throw error;
+      
+      return data || [];
+      
+    } catch (error: any) {
+      console.error('Error fetching all water intake history:', error);
+      toast.error('Failed to export water intake history');
+      return [];
+    }
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -127,6 +159,7 @@ export const useWaterIntakeHistory = ({ userId, onTotalUpdate }: UseWaterIntakeH
     totalPages,
     timeFilter,
     handlePageChange,
-    handleFilterChange
+    handleFilterChange,
+    fetchAllHistory
   };
 };

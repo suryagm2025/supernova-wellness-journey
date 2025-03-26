@@ -1,204 +1,247 @@
-
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { MorningCheckInValue, WellnessEntry } from '@/types/wellness';
 
-export const useMorningCheckIn = () => {
-  const [wakeUpTime, setWakeUpTime] = useState('');
-  const [waterIntake, setWaterIntake] = useState('');
-  const [movement, setMovement] = useState('');
-  const [activeVoiceField, setActiveVoiceField] = useState<string | null>(null);
+interface FormData {
+  sleepQuality: string;
+  energyLevels: string;
+  mood: string;
+  exercise: string;
+  waterIntake: string;
+  breakfast: string;
+  dailyGoals: string;
+  wins: string;
+  improvements: string;
+}
+
+const initialFormData: FormData = {
+  sleepQuality: '',
+  energyLevels: '',
+  mood: '',
+  exercise: '',
+  waterIntake: '',
+  breakfast: '',
+  dailyGoals: '',
+  wins: '',
+  improvements: ''
+};
+
+const useMorningCheckIn = () => {
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasSavedData, setHasSavedData] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<string | null>(null);
+  const [hasCheckedInToday, setHasCheckedInToday] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  // Check if user has already completed a check-in today
   useEffect(() => {
-    const checkExistingEntry = async () => {
-      if (!user) return;
-      
-      try {
-        const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-        
-        const { data, error } = await supabase
-          .from('wellness_entries')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('type', 'morning_check_in')
-          .gte('created_at', startOfDay)
-          .lte('created_at', endOfDay)
-          .single();
-        
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error checking for existing entry:', error);
-          return;
-        }
-        
-        if (data) {
-          // Pre-fill form with existing data
-          const entryData = data as WellnessEntry;
-          const value = entryData.value as MorningCheckInValue;
-          
-          setWakeUpTime(value.wake_up_time || '');
-          setWaterIntake(value.water_intake || '');
-          setMovement(value.movement || '');
-          setHasSavedData(true);
-          
-          toast.info('You already checked in today. You can update your entry if needed.');
-        }
-      } catch (error) {
-        console.error('Error in checkExistingEntry:', error);
-      }
-    };
-    
-    checkExistingEntry();
+    // Check if the user has already checked in today
+    if (user) {
+      checkIfUserHasCheckedInToday(user.id);
+    }
   }, [user]);
+
+  const checkIfUserHasCheckedInToday = async (userId: string) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+
+    try {
+      const { data, error } = await supabase
+        .from('wellness_entries')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('type', 'morning_checkin')
+        .gte('created_at', today.toISOString());
+
+      if (error) {
+        console.error("Error checking today's check-in:", error);
+        return;
+      }
+
+      setHasCheckedInToday(data && data.length > 0);
+    } catch (error) {
+      console.error("Error checking today's check-in:", error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!user) {
-      toast.error('You need to be logged in to complete morning check-in');
+      toast.error('You must be logged in to submit a check-in.');
       return;
     }
 
-    if (!wakeUpTime || !waterIntake || !movement) {
-      toast.error('Please fill out all fields');
-      return;
-    }
-    
+    setIsSubmitting(true);
+    setSubmissionResult(null);
+
     try {
-      setIsSubmitting(true);
-      
-      const checkInData: Omit<WellnessEntry, 'id' | 'created_at'> = {
+      // Structure the data for the wellness_entries table
+      const wellnessEntry = {
         user_id: user.id,
-        type: 'morning_check_in',
-        value: {
-          wake_up_time: wakeUpTime,
-          water_intake: waterIntake,
-          movement: movement,
-          date: new Date().toISOString()
-        }
+        type: 'morning_checkin',
+        value: formData,
       };
-      
-      // Store check-in data in wellness_entries table
-      let result;
-      
-      if (hasSavedData) {
-        // Update existing entry
-        const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
-        
-        const { data: existingEntry } = await supabase
-          .from('wellness_entries')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('type', 'morning_check_in')
-          .gte('created_at', startOfDay)
-          .lte('created_at', endOfDay)
-          .single();
-        
-        if (existingEntry) {
-          result = await supabase
-            .from('wellness_entries')
-            .update(checkInData)
-            .eq('id', existingEntry.id);
-        }
-      } else {
-        // Create new entry
-        result = await supabase
-          .from('wellness_entries')
-          .insert(checkInData);
+
+      // Insert the wellness entry into the database
+      const { data: newEntry, error } = await supabase
+        .from('wellness_entries')
+        .insert([wellnessEntry])
+        .select(); // Select the newly inserted row
+
+      if (error) {
+        console.error('Error submitting morning check-in:', error);
+        setSubmissionResult(`Failed to submit check-in: ${error.message}`);
+				toast.error(`Failed to submit check-in: ${error.message}`);
+        return;
       }
-      
-      if (result?.error) throw result.error;
-      
-      // Also log water intake in water_intake table
-      let waterAmount = 0;
-      // Try to extract amount from water intake text
-      const waterRegex = /(\d+)\s*(ml|glass|glasses|oz|cup|cups)/i;
-      const waterMatch = waterIntake.match(waterRegex);
-      
-      if (waterMatch) {
-        const amount = parseInt(waterMatch[1]);
-        const unit = waterMatch[2].toLowerCase();
-        
-        // Convert to ml
-        if (unit.includes('glass') || unit.includes('cup')) {
-          waterAmount = amount * 250; // Assume one glass/cup is 250ml
-        } else if (unit.includes('oz')) {
-          waterAmount = amount * 30; // Approximate conversion
-        } else {
-          waterAmount = amount; // Already in ml
-        }
-        
-        // Log water intake if we could parse an amount
-        if (waterAmount > 0) {
-          const { error: waterError } = await supabase
-            .from('water_intake')
-            .insert({
-              user_id: user.id,
-              amount_ml: waterAmount,
-              notes: `From morning check-in: ${waterIntake}`
-            });
-          
-          if (waterError) console.error('Error logging water intake:', waterError);
-        }
-      }
-      
-      // Log streak if needed
-      const { error: streakError } = await supabase.rpc('record_user_streak', { 
-        user_id: user.id 
-      });
-      
-      if (streakError) console.error('Error updating streak:', streakError);
-      
-      toast.success(hasSavedData ? 'Morning check-in updated!' : 'Morning check-in completed!');
-      
-      // Wait a moment before redirecting
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-      
+
+      // Reset the form and set success message
+      setFormData(initialFormData);
+      setSubmissionResult('Check-in submitted successfully!');
+			toast.success('Check-in submitted successfully!');
+      setHasCheckedInToday(true);
+
+      // Update streak
+      await updateStreak(user.id);
+
+			// Redirect to dashboard after successful submission
+			navigate('/dashboard');
     } catch (error: any) {
-      console.error('Morning check-in error:', error);
-      toast.error(error.message || 'Error during check-in');
+      console.error('Error submitting morning check-in:', error);
+      setSubmissionResult(`Failed to submit check-in: ${error.message}`);
+			toast.error(`Failed to submit check-in: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleVoiceInput = (transcript: string) => {
-    if (activeVoiceField === 'wakeUpTime') {
-      setWakeUpTime(transcript);
-    } else if (activeVoiceField === 'waterIntake') {
-      setWaterIntake(transcript);
-    } else if (activeVoiceField === 'movement') {
-      setMovement(transcript);
+  const updateStreak = async (userId: string) => {
+    try {
+      // Get today's date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      // Fetch the streak data for the user
+      let { data: streakData, error: streakError } = await supabase
+        .from('streak_tracking')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+  
+      if (streakError) {
+        console.error('Error fetching streak data:', streakError);
+        throw streakError;
+      }
+  
+      if (!streakData) {
+        // If no streak data exists, create a new entry
+        const { error: insertError } = await supabase
+          .from('streak_tracking')
+          .insert([
+            {
+              user_id: userId,
+              current_streak: 1,
+              longest_streak: 1,
+              last_check_in: today.toISOString(),
+              updated_at: today.toISOString(),
+            },
+          ]);
+  
+        if (insertError) {
+          console.error('Error creating streak data:', insertError);
+          throw insertError;
+        }
+  
+        console.log('New streak data created.');
+        return;
+      }
+  
+      // Check if the last check-in was yesterday
+      const lastCheckIn = new Date(streakData.last_check_in || streakData.created_at);
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+  
+      const isYesterday =
+        lastCheckIn.getDate() === yesterday.getDate() &&
+        lastCheckIn.getMonth() === yesterday.getMonth() &&
+        lastCheckIn.getFullYear() === yesterday.getFullYear();
+  
+      if (isYesterday) {
+        // If the last check-in was yesterday, increment the streak
+        const newStreak = streakData.current_streak + 1;
+        const newLongestStreak = Math.max(newStreak, streakData.longest_streak);
+  
+        const { error: updateError } = await supabase
+          .from('streak_tracking')
+          .update({
+            current_streak: newStreak,
+            longest_streak: newLongestStreak,
+            last_check_in: today.toISOString(),
+            updated_at: today.toISOString(),
+          })
+          .eq('user_id', userId);
+  
+        if (updateError) {
+          console.error('Error updating streak data:', updateError);
+          throw updateError;
+        }
+  
+        console.log('Streak incremented.');
+      } else if (
+        lastCheckIn.getDate() === today.getDate() &&
+        lastCheckIn.getMonth() === today.getMonth() &&
+        lastCheckIn.getFullYear() === today.getFullYear()
+      ) {
+        // If already checked in today, do nothing
+        console.log('Already checked in today.');
+        return;
+      } else {
+        // If the last check-in was not yesterday, reset the streak
+        const { error: resetError } = await supabase
+          .from('streak_tracking')
+          .update({
+            current_streak: 1,
+            last_check_in: today.toISOString(),
+            updated_at: today.toISOString(),
+          })
+          .eq('user_id', userId);
+  
+        if (resetError) {
+          console.error('Error resetting streak data:', resetError);
+          throw resetError;
+        }
+  
+        console.log('Streak reset.');
+      }
+    } catch (error: any) {
+      console.error('Error updating streak:', error.message);
+			toast.error(`Failed to update streak: ${error.message}`);
     }
-    
-    // Reset after receiving input
-    setActiveVoiceField(null);
   };
 
+  interface WellnessEntryValue {
+    [key: string]: string | number | boolean;
+  }
+
   return {
-    wakeUpTime,
-    setWakeUpTime,
-    waterIntake,
-    setWaterIntake,
-    movement,
-    setMovement,
-    activeVoiceField,
-    setActiveVoiceField,
+    formData,
     isSubmitting,
+    submissionResult,
+    hasCheckedInToday,
+    handleInputChange,
     handleSubmit,
-    handleVoiceInput
   };
 };
+
+export default useMorningCheckIn;
