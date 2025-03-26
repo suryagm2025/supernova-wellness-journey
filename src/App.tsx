@@ -28,6 +28,9 @@ import Blog from '@/pages/Blog';
 import NotFound from '@/pages/NotFound';
 import TimelineDashboard from '@/pages/TimelineDashboard';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import TermsOfUse from '@/pages/TermsOfUse';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import CookiePolicy from '@/pages/CookiePolicy';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -51,6 +54,9 @@ const router = createBrowserRouter(
       <Route path="/faq" element={<FAQ />} />
       <Route path="/programs" element={<Programs />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/terms" element={<TermsOfUse />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/cookie-policy" element={<CookiePolicy />} />
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
