@@ -10,6 +10,7 @@ import AuthButtons from './AuthButtons';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
 
@@ -50,7 +51,11 @@ const Header: React.FC = () => {
               <Logo size="md" withText={true} />
             </div>
             
-            <Navigation isPublicPage={isPublicPage} />
+            <Navigation 
+              isPublicPage={isPublicPage}
+              isMobileMenuOpen={isMobileMenuOpen}
+              setMobileMenuOpen={setMobileMenuOpen}
+            />
           </div>
 
           <div className="flex items-center space-x-4">

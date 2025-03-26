@@ -22,7 +22,7 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenuOpen, isPublicPage = false }) => {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth(); // Change from logout to signOut to match AuthContext
   const location = useLocation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -130,7 +130,7 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenu
           </NavLink>
           
           {user ? (
-            <button onClick={logout} className="text-gray-400 hover:text-white transition">
+            <button onClick={signOut} className="text-gray-400 hover:text-white transition">
               Logout
             </button>
           ) : (
@@ -209,7 +209,7 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenu
         </NavLink>
         
         {user ? (
-          <button onClick={logout} className="block py-2 text-gray-400 hover:text-white transition">
+          <button onClick={signOut} className="block py-2 text-gray-400 hover:text-white transition">
             Logout
           </button>
         ) : (
