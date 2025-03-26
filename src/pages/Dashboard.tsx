@@ -7,6 +7,8 @@ import { Clock, Droplet, Utensils, Activity, Moon } from 'lucide-react';
 import DashboardStyleSelector, { DashboardStyle } from '@/components/dashboard/DashboardStyleSelector';
 import EmotionPicker, { EmotionType } from '@/components/emotion/EmotionPicker';
 import MoodBasedAffirmation from '@/components/emotion/MoodBasedAffirmation';
+import MicroJournal from '@/components/journal/MicroJournal';
+import PremiumLock from '@/components/premium/PremiumLock';
 
 const Dashboard = () => {
   const [dashboardStyle, setDashboardStyle] = useState<DashboardStyle>('coach');
@@ -28,6 +30,10 @@ const Dashboard = () => {
             {selectedEmotion && (
               <MoodBasedAffirmation emotion={selectedEmotion} />
             )}
+
+            <div className="mt-6">
+              <MicroJournal />
+            </div>
           </div>
         );
       
@@ -73,6 +79,14 @@ const Dashboard = () => {
             {selectedEmotion && (
               <MoodBasedAffirmation emotion={selectedEmotion} />
             )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+              <MicroJournal />
+              <PremiumLock 
+                featureName="Advanced Journal Analytics" 
+                description="Unlock AI-powered insights from your journal entries and track your emotional patterns over time."
+              />
+            </div>
           </div>
         );
       
@@ -100,35 +114,22 @@ const Dashboard = () => {
             {selectedEmotion && (
               <MoodBasedAffirmation emotion={selectedEmotion} />
             )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <PremiumLock 
+                featureName="Advanced Data Insights" 
+                description="Unlock detailed analytics, trend forecasting, and personalized recommendations based on your data patterns."
+              />
+            </div>
           </div>
         );
       
       case 'journey':
         return (
           <div className="space-y-10 animate-fade-in">
-            <GlassMorphicCard className="p-6 mb-6">
-              <h2 className="text-xl font-display font-semibold mb-4">Today's Journal</h2>
-              <textarea 
-                className="w-full bg-white/5 border border-white/10 rounded-lg p-4 text-gray-200 focus:outline-none focus:ring-2 focus:ring-supernova-blue/50 min-h-[150px]" 
-                placeholder="Write your thoughts for today..."
-              />
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button className="px-3 py-1.5 bg-supernova-blue/20 hover:bg-supernova-blue/30 rounded-md text-sm transition-colors">
-                  🙏 Gratitude
-                </button>
-                <button className="px-3 py-1.5 bg-supernova-purple/20 hover:bg-supernova-purple/30 rounded-md text-sm transition-colors">
-                  💡 Insight
-                </button>
-                <button className="px-3 py-1.5 bg-supernova-pink/20 hover:bg-supernova-pink/30 rounded-md text-sm transition-colors">
-                  🎯 Goal
-                </button>
-                <button className="px-3 py-1.5 bg-supernova-gold/20 hover:bg-supernova-gold/30 rounded-md text-sm transition-colors">
-                  💪 Achievement
-                </button>
-              </div>
-            </GlassMorphicCard>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <MicroJournal />
+              
               <GlassMorphicCard className="p-6">
                 <h3 className="font-display text-lg mb-3">Past Mood Map</h3>
                 <div className="grid grid-cols-7 gap-2">
