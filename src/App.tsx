@@ -52,7 +52,6 @@ const AppRoot = () => {
 const PublicLayout = () => {
   return (
     <Layout>
-      {/* Pass children to Layout via Outlet */}
       <Outlet />
     </Layout>
   );

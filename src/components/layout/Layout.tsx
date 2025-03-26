@@ -20,7 +20,7 @@ import { LayoutDashboard, BookText, UserRound, Settings as SettingsIcon, LogOut,
 import Logo from '@/components/ui/Logo';
 
 interface LayoutProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   hideFooter?: boolean;
 }
 
