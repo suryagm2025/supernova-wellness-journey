@@ -31,11 +31,16 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import TermsOfUse from '@/pages/TermsOfUse';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import CookiePolicy from '@/pages/CookiePolicy';
+import TimeBasedFlow from '@/components/timeflows/TimeBasedFlow';
+import MorningCheckInPopup from '@/components/checkIn/MorningCheckInPopup';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
   return (
     <AuthProvider>
+      {/* Global time-based components */}
+      <TimeBasedFlow />
+      <MorningCheckInPopup />
       <Outlet />
     </AuthProvider>
   );
@@ -51,12 +56,12 @@ const router = createBrowserRouter(
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/streak" element={<Streak />} />
       <Route path="/emotion-check" element={<EmotionCheck />} />
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/programs" element={<Programs />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/terms" element={<TermsOfUse />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/cookie-policy" element={<CookiePolicy />} />
+      <Route path="/faq" element={<Layout><FAQ /></Layout>} />
+      <Route path="/programs" element={<Layout><Programs /></Layout>} />
+      <Route path="/blog" element={<Layout><Blog /></Layout>} />
+      <Route path="/terms" element={<Layout><TermsOfUse /></Layout>} />
+      <Route path="/privacy" element={<Layout><PrivacyPolicy /></Layout>} />
+      <Route path="/cookie-policy" element={<Layout><CookiePolicy /></Layout>} />
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
