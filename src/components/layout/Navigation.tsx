@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Flame } from 'lucide-react';
+import { Flame, SmilePlus } from 'lucide-react';
 
 interface NavigationProps {
   isPublicPage: boolean;
@@ -32,6 +32,9 @@ const Navigation: React.FC<NavigationProps> = ({ isPublicPage }) => {
       </Link>
       <Link to="/streak" className={`nav-link ${isActive('/streak') ? 'active' : ''} flex items-center`}>
         Streak <Flame size={16} className="ml-1 text-supernova-blue" />
+      </Link>
+      <Link to="/emotion-check" className={`nav-link ${isActive('/emotion-check') ? 'active' : ''} flex items-center`}>
+        Mood <SmilePlus size={16} className="ml-1 text-supernova-pink" />
       </Link>
       <Link to="/blog" className={`nav-link ${isActive('/blog') ? 'active' : ''}`}>
         Blog

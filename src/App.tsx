@@ -22,6 +22,7 @@ import Suggestions from '@/pages/Suggestions';
 import ResetPassword from '@/pages/ResetPassword';
 import Streak from '@/pages/Streak';
 import EmotionCheck from '@/pages/EmotionCheck';
+import FAQ from '@/pages/FAQ';
 
 // Separate AuthCheck component that uses the useAuth hook
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
@@ -53,6 +54,7 @@ const router = createBrowserRouter(
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/streak" element={<Streak />} />
       <Route path="/emotion-check" element={<EmotionCheck />} />
+      <Route path="/faq" element={<FAQ />} />
       
       {/* Protected routes */}
       <Route path="/dashboard" element={<AuthCheck><Dashboard /></AuthCheck>} />
