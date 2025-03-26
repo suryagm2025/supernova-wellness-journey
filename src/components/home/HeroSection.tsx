@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Mic, Sun, Salad, Yoga, Moon, ChevronDown } from 'lucide-react';
+import { Mic, Sun, Salad, Moon, ChevronDown, Flower } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import ParticleEffect from '@/components/ui/ParticleEffect';
@@ -35,7 +35,7 @@ const HeroSection = () => {
       <div className="absolute top-[30%] left-0 right-0 flex justify-around opacity-20 parallax" data-speed="0.2">
         <Sun className="text-yellow-400 w-10 h-10 md:w-14 md:h-14 animate-float" />
         <Salad className="text-green-400 w-10 h-10 md:w-14 md:h-14 animate-float" style={{ animationDelay: '0.5s' }} />
-        <Yoga className="text-purple-400 w-10 h-10 md:w-14 md:h-14 animate-float" style={{ animationDelay: '1s' }} />
+        <Flower className="text-purple-400 w-10 h-10 md:w-14 md:h-14 animate-float" style={{ animationDelay: '1s' }} />
         <Moon className="text-blue-400 w-10 h-10 md:w-14 md:h-14 animate-float" style={{ animationDelay: '1.5s' }} />
       </div>
       
