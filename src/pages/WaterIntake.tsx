@@ -11,6 +11,7 @@ import WaterVisualization from '@/components/water/WaterVisualization';
 import QuickAdjustControls from '@/components/water/QuickAdjustControls';
 import WaterIntakeForm from '@/components/water/WaterIntakeForm';
 import QuickLogButtons from '@/components/water/QuickLogButtons';
+import WaterIntakeHistory from '@/components/water/WaterIntakeHistory';
 
 const WaterIntake = () => {
   const [waterAmount, setWaterAmount] = useState('');
@@ -142,6 +143,10 @@ const WaterIntake = () => {
     }
   };
 
+  const updateTotalWater = (newTotal: number) => {
+    setTotalWater(newTotal);
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -158,7 +163,7 @@ const WaterIntake = () => {
             </p>
           </div>
           
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <GlassMorphicCard className="p-6">
               <h3 className="text-xl font-display font-semibold mb-6">Today's Hydration</h3>
               
@@ -182,6 +187,15 @@ const WaterIntake = () => {
               
               <QuickLogButtons 
                 onQuickLog={setWaterAmount}
+              />
+            </GlassMorphicCard>
+          </div>
+          
+          <div className="max-w-5xl mx-auto">
+            <GlassMorphicCard className="p-6">
+              <WaterIntakeHistory 
+                userId={user?.id}
+                onTotalUpdate={updateTotalWater}
               />
             </GlassMorphicCard>
           </div>
