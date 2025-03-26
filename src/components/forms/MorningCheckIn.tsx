@@ -9,6 +9,23 @@ import { supabase } from '@/integrations/supabase/client';
 import { Spinner } from '@/components/ui/spinner';
 import { useNavigate } from 'react-router-dom';
 
+// Define the type for the value field in wellness_entries
+interface MorningCheckInValue {
+  wake_up_time?: string;
+  water_intake?: string;
+  movement?: string;
+  date?: string;
+}
+
+// Define the type for the wellness entry
+interface WellnessEntry {
+  id: string;
+  user_id: string;
+  type: string;
+  value: MorningCheckInValue;
+  created_at: string;
+}
+
 const MorningCheckIn: React.FC = () => {
   const [wakeUpTime, setWakeUpTime] = useState('');
   const [waterIntake, setWaterIntake] = useState('');
@@ -45,7 +62,9 @@ const MorningCheckIn: React.FC = () => {
         
         if (data) {
           // Pre-fill form with existing data
-          const value = data.value as any;
+          const entryData = data as WellnessEntry;
+          const value = entryData.value;
+          
           setWakeUpTime(value.wake_up_time || '');
           setWaterIntake(value.water_intake || '');
           setMovement(value.movement || '');
