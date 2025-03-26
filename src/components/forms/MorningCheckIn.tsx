@@ -4,26 +4,62 @@ import GlassMorphicCard from '../ui/GlassMorphicCard';
 import { Clock, Droplet, StretchHorizontal, Mic } from 'lucide-react';
 import { toast } from 'sonner';
 import VoiceInput from '../VoiceInput';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Spinner } from '@/components/ui/spinner';
 
 const MorningCheckIn: React.FC = () => {
   const [wakeUpTime, setWakeUpTime] = useState('');
   const [waterIntake, setWaterIntake] = useState('');
   const [movement, setMovement] = useState('');
   const [activeVoiceField, setActiveVoiceField] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast.error('You need to be logged in to complete morning check-in');
+      return;
+    }
+
     if (!wakeUpTime || !waterIntake || !movement) {
       toast.error('Please fill out all fields');
       return;
     }
     
-    toast.success('Morning check-in completed!');
-    
-    // Reset form
-    setWakeUpTime('');
-    setWaterIntake('');
-    setMovement('');
+    try {
+      setIsSubmitting(true);
+      
+      // Store check-in data in wellness_entries table
+      const { error } = await supabase
+        .from('wellness_entries')
+        .insert({
+          user_id: user.id,
+          type: 'morning_check_in',
+          value: {
+            wake_up_time: wakeUpTime,
+            water_intake: waterIntake,
+            movement: movement,
+            date: new Date().toISOString()
+          }
+        });
+      
+      if (error) throw error;
+      
+      toast.success('Morning check-in completed!');
+      
+      // Reset form
+      setWakeUpTime('');
+      setWaterIntake('');
+      setMovement('');
+    } catch (error: any) {
+      console.error('Morning check-in error:', error);
+      toast.error(error.message || 'Error during check-in');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleVoiceInput = (transcript: string) => {
@@ -134,9 +170,17 @@ const MorningCheckIn: React.FC = () => {
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full button-glow bg-supernova-dark border border-supernova-blue/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-blue/50"
+            disabled={isSubmitting}
+            className="w-full button-glow bg-supernova-dark border border-supernova-blue/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-blue/50 disabled:opacity-50"
           >
-            Submit Check-In
+            {isSubmitting ? (
+              <span className="flex items-center justify-center">
+                <Spinner size="sm" className="mr-2" />
+                Submitting...
+              </span>
+            ) : (
+              'Submit Check-In'
+            )}
           </button>
         </div>
       </form>

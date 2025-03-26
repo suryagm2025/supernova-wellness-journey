@@ -6,16 +6,26 @@ import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { Droplet, PlusCircle, MinusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import VoiceInput from '../components/VoiceInput';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Spinner } from '@/components/ui/spinner';
 
 const WaterIntake = () => {
   const [waterAmount, setWaterAmount] = useState('');
   const [totalWater, setTotalWater] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!waterAmount) {
       toast.error('Please enter how much water you drank');
+      return;
+    }
+
+    if (!user) {
+      toast.error('You need to be logged in to track water intake');
       return;
     }
     
@@ -37,12 +47,32 @@ const WaterIntake = () => {
       amount = parseInt(waterAmount) || 0;
     }
     
-    if (amount > 0) {
+    if (amount <= 0) {
+      toast.error('Unable to understand the amount. Try "2 glasses" or "500ml"');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      
+      const { error } = await supabase
+        .from('water_intake')
+        .insert({
+          user_id: user.id,
+          amount_ml: amount,
+          notes: waterAmount // Store the original input as a note
+        });
+      
+      if (error) throw error;
+      
       setTotalWater(prev => prev + amount);
       toast.success(`Added ${amount}ml of water!`);
       setWaterAmount('');
-    } else {
-      toast.error('Unable to understand the amount. Try "2 glasses" or "500ml"');
+    } catch (error: any) {
+      console.error('Error logging water:', error);
+      toast.error(error.message || 'Failed to log water intake');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -58,11 +88,39 @@ const WaterIntake = () => {
     }, 1000);
   };
 
-  const adjustWater = (increment: number) => {
-    // Add or remove 250ml (one glass)
-    const newTotal = Math.max(0, totalWater + increment);
-    setTotalWater(newTotal);
-    toast.success(increment > 0 ? 'Added a glass of water!' : 'Removed a glass of water');
+  const adjustWater = async (increment: number) => {
+    if (!user) {
+      toast.error('You need to be logged in to track water intake');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      
+      // Add or remove 250ml (one glass)
+      const newAmount = Math.max(0, increment);
+      
+      if (increment > 0) {
+        const { error } = await supabase
+          .from('water_intake')
+          .insert({
+            user_id: user.id,
+            amount_ml: newAmount,
+            notes: increment > 0 ? 'Quick add: 1 glass' : 'Quick remove: 1 glass'
+          });
+        
+        if (error) throw error;
+      }
+      
+      const newTotal = Math.max(0, totalWater + increment);
+      setTotalWater(newTotal);
+      toast.success(increment > 0 ? 'Added a glass of water!' : 'Removed a glass of water');
+    } catch (error: any) {
+      console.error('Error adjusting water:', error);
+      toast.error(error.message || 'Failed to adjust water intake');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Calculate percentage for the water visualization (max 3000ml)
@@ -112,15 +170,17 @@ const WaterIntake = () => {
               <div className="flex justify-center space-x-4 mb-6">
                 <button 
                   onClick={() => adjustWater(-250)}
-                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
+                  disabled={isSubmitting}
+                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors disabled:opacity-50"
                 >
                   <MinusCircle size={24} />
                 </button>
                 <button 
                   onClick={() => adjustWater(250)}
-                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-supernova-blue transition-colors"
+                  disabled={isSubmitting}
+                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-supernova-blue transition-colors disabled:opacity-50"
                 >
-                  <PlusCircle size={24} />
+                  {isSubmitting ? <Spinner size="sm" className="mx-auto" /> : <PlusCircle size={24} />}
                 </button>
               </div>
               
@@ -157,9 +217,17 @@ const WaterIntake = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full button-glow bg-supernova-dark border border-supernova-blue/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-blue/50"
+                    disabled={isSubmitting}
+                    className="w-full button-glow bg-supernova-dark border border-supernova-blue/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-blue/50 disabled:opacity-50"
                   >
-                    Log Water Intake
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center">
+                        <Spinner size="sm" className="mr-2" />
+                        Logging...
+                      </span>
+                    ) : (
+                      'Log Water Intake'
+                    )}
                   </button>
                 </div>
               </form>

@@ -9,6 +9,60 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      evening_check: {
+        Row: {
+          created_at: string
+          gratitude: string
+          id: string
+          screen_time: string
+          sleep_time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          gratitude: string
+          id?: string
+          screen_time: string
+          sleep_time: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          gratitude?: string
+          id?: string
+          screen_time?: string
+          sleep_time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      meals: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          meal_type: string
+          photo_url: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          meal_type: string
+          photo_url?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          meal_type?: string
+          photo_url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -76,6 +130,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      water_intake: {
+        Row: {
+          amount_ml: number
+          created_at: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_ml: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_ml?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       wellness_activities: {
         Row: {

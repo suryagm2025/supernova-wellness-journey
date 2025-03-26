@@ -6,27 +6,57 @@ import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { MoonStar, Clock, Smartphone, Heart, Mic } from 'lucide-react';
 import { toast } from 'sonner';
 import VoiceInput from '../components/VoiceInput';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Spinner } from '@/components/ui/spinner';
 
 const EveningCheck = () => {
   const [sleepTime, setSleepTime] = useState('');
   const [screenTime, setScreenTime] = useState('');
   const [gratitude, setGratitude] = useState('');
   const [activeVoiceField, setActiveVoiceField] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast.error('You need to be logged in to complete evening check-in');
+      return;
+    }
     
     if (!sleepTime || !screenTime || !gratitude) {
       toast.error('Please fill out all fields');
       return;
     }
     
-    toast.success('Evening check-in completed!');
-    
-    // Reset form
-    setSleepTime('');
-    setScreenTime('');
-    setGratitude('');
+    try {
+      setIsSubmitting(true);
+      
+      const { error } = await supabase
+        .from('evening_check')
+        .insert({
+          user_id: user.id,
+          sleep_time: sleepTime,
+          screen_time: screenTime,
+          gratitude: gratitude
+        });
+      
+      if (error) throw error;
+      
+      toast.success('Evening check-in completed!');
+      
+      // Reset form
+      setSleepTime('');
+      setScreenTime('');
+      setGratitude('');
+    } catch (error: any) {
+      console.error('Error submitting evening check:', error);
+      toast.error(error.message || 'Failed to submit evening check-in');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleVoiceInput = (transcript: string) => {
@@ -151,9 +181,17 @@ const EveningCheck = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full button-glow bg-supernova-dark border border-supernova-pink/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-pink/50"
+                  disabled={isSubmitting}
+                  className="w-full button-glow bg-supernova-dark border border-supernova-pink/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-pink/50 disabled:opacity-50"
                 >
-                  Submit Check-In
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <Spinner size="sm" className="mr-2" />
+                      Submitting...
+                    </span>
+                  ) : (
+                    'Submit Check-In'
+                  )}
                 </button>
               </div>
             </form>

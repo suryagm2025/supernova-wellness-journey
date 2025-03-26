@@ -13,6 +13,7 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "@/components/ui/drawer";
+import { useAuth } from '@/context/AuthContext';
 
 type FlowType = 'morning' | 'midday' | 'evening' | null;
 
@@ -38,8 +39,15 @@ const TimeBasedFlow: React.FC = () => {
   const [mood, setMood] = useState<string>('');
   const [energy, setEnergy] = useState<string>('');
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
+    // Only show flows for logged in users
+    if (!user) {
+      setCurrentFlow(null);
+      return;
+    }
+
     // Check the current time and set the appropriate flow
     const checkTimeForFlow = () => {
       const now = new Date();
@@ -79,7 +87,7 @@ const TimeBasedFlow: React.FC = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [currentFlow]);
+  }, [currentFlow, user]);
 
   const handleMorningSubmit = () => {
     if (!mood || !energy) {

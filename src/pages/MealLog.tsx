@@ -5,26 +5,57 @@ import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { Utensils, Upload, Clock, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Spinner } from '@/components/ui/spinner';
 
 const MealLog = () => {
   const [mealDescription, setMealDescription] = useState('');
   const [selectedMealTime, setSelectedMealTime] = useState('breakfast');
   const [uploadMode, setUploadMode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast.error('You need to be logged in to log meals');
+      return;
+    }
     
     if (uploadMode) {
       toast.success('Photo upload simulated for meal analysis!');
-    } else if (!mealDescription) {
+      return;
+    } 
+    
+    if (!mealDescription) {
       toast.error('Please describe your meal');
       return;
-    } else {
-      toast.success(`${selectedMealTime.charAt(0).toUpperCase() + selectedMealTime.slice(1)} logged successfully!`);
     }
     
-    setMealDescription('');
-    setUploadMode(false);
+    try {
+      setIsSubmitting(true);
+      
+      const { error } = await supabase
+        .from('meals')
+        .insert({
+          user_id: user.id,
+          meal_type: selectedMealTime,
+          description: mealDescription,
+          photo_url: null // No photo uploaded in this version
+        });
+      
+      if (error) throw error;
+      
+      toast.success(`${selectedMealTime.charAt(0).toUpperCase() + selectedMealTime.slice(1)} logged successfully!`);
+      setMealDescription('');
+    } catch (error: any) {
+      console.error('Error logging meal:', error);
+      toast.error(error.message || 'Failed to log meal');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const mealTimes = [
@@ -125,9 +156,17 @@ const MealLog = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full button-glow bg-supernova-dark border border-supernova-purple/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-purple/50"
+                    disabled={isSubmitting}
+                    className="w-full button-glow bg-supernova-dark border border-supernova-purple/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-purple/50 disabled:opacity-50"
                   >
-                    {uploadMode ? 'Analyze & Log Meal' : 'Log Meal'}
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center">
+                        <Spinner size="sm" className="mr-2" />
+                        Saving...
+                      </span>
+                    ) : (
+                      uploadMode ? 'Analyze & Log Meal' : 'Log Meal'
+                    )}
                   </button>
                 </div>
               </form>
