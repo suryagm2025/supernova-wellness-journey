@@ -1,96 +1,89 @@
+import React from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Navigate
+} from 'react-router-dom';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+import Layout from '@/components/layout/Layout';
+import Home from '@/pages/Home';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import SignUp from '@/pages/SignUp';
+import Account from '@/pages/Account';
+import Settings from '@/pages/Settings';
+import CheckIn from '@/pages/CheckIn';
+import WaterIntake from '@/pages/WaterIntake';
+import Suggestions from '@/pages/Suggestions';
+import ResetPassword from '@/pages/ResetPassword';
+import Streak from '@/pages/Streak';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Layout from "./components/layout/Layout";
-import TimeBasedFlow from "./components/timeflows/TimeBasedFlow";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import CheckIn from "./pages/CheckIn";
-import WaterIntake from "./pages/WaterIntake";
-import MealLog from "./pages/MealLog";
-import Activity from "./pages/Activity";
-import EveningCheck from "./pages/EveningCheck";
-import Suggestions from "./pages/Suggestions";
-import NotFound from "./pages/NotFound";
-import Account from "./pages/Account";
-import Settings from "./pages/Settings";
-import Programs from "./pages/Programs";
-import Blog from "./pages/Blog";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import AuthCallback from "./pages/AuthCallback";
-import FAQ from "./pages/FAQ";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfUse from "./pages/TermsOfUse";
-import CookiePolicy from "./pages/CookiePolicy";
-import { AuthProvider } from "./context/AuthContext";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+function App() {
+  const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+    const { user, isLoading } = useAuth();
 
-// Configure React Query client with better error handling
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
+    if (isLoading) {
+      return <div>Loading...</div>; // Or a more appropriate loading indicator
+    }
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter basename="/">
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <TimeBasedFlow />
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Index />} />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
-              <Route path="reset-password" element={<ResetPassword />} />
-              <Route path="faq" element={<FAQ />} />
-              <Route path="privacy" element={<PrivacyPolicy />} />
-              <Route path="terms" element={<TermsOfUse />} />
-              <Route path="cookie-policy" element={<CookiePolicy />} />
-            </Route>
-            
-            {/* Auth callback doesn't need the layout */}
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Layout />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="checkin" element={<CheckIn />} />
-                <Route path="water" element={<WaterIntake />} />
-                <Route path="meals" element={<MealLog />} />
-                <Route path="activity" element={<Activity />} />
-                <Route path="evening" element={<EveningCheck />} />
-                <Route path="suggestions" element={<Suggestions />} />
-                <Route path="account" element={<Account />} />
-                <Route path="settings" element={<Settings />} />
-                <Route path="programs" element={<Programs />} />
-                <Route path="blog" element={<Blog />} />
-              </Route>
-            </Route>
-            
-            {/* Fallback route - must be last */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
+  };
+
+  return (
+    <AuthProvider>
+      <RouterProvider 
+        router={
+          createBrowserRouter([
+            {
+              path: "/",
+              element: <Home />
+            },
+            {
+              path: "/dashboard",
+              element: <PrivateRoute><Dashboard /></PrivateRoute>
+            },
+            {
+              path: "/login",
+              element: <Login />
+            },
+            {
+              path: "/signup",
+              element: <SignUp />
+            },
+            {
+              path: "/account",
+              element: <PrivateRoute><Account /></PrivateRoute>
+            },
+            {
+              path: "/settings",
+              element: <PrivateRoute><Settings /></PrivateRoute>
+            },
+            {
+              path: "/check-in",
+              element: <PrivateRoute><CheckIn /></PrivateRoute>
+            },
+            {
+              path: "/water",
+              element: <PrivateRoute><WaterIntake /></PrivateRoute>
+            },
+            {
+              path: "/suggestions",
+              element: <PrivateRoute><Suggestions /></PrivateRoute>
+            },
+            {
+              path: "/reset-password",
+              element: <ResetPassword />
+            },
+            {
+              path: "/streak",
+              element: <Streak />
+            },
+          ])
+        } 
+      />
+    </AuthProvider>
+  );
+}
 
 export default App;
