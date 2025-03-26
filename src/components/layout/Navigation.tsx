@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -11,15 +12,17 @@ import {
   Menu, 
   X,
   Calendar, 
+  Mic
 } from 'lucide-react';
 
 interface NavigationProps {
   isMobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
+  isPublicPage?: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenuOpen }) => {
-  const { isLoggedIn, logout } = useAuth();
+const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenuOpen, isPublicPage = false }) => {
+  const { user, logout } = useAuth();
   const location = useLocation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -112,7 +115,21 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenu
             </div>
           </NavLink>
           
-          {isLoggedIn ? (
+          <NavLink
+            to="/voice-companion"
+            className={({ isActive }) => 
+              isActive 
+                ? "text-white" 
+                : "text-gray-400 hover:text-white transition"
+            }
+          >
+            <div className="flex items-center font-medium">
+              <Mic size={16} className="mr-1" />
+              Voice Assistant
+            </div>
+          </NavLink>
+          
+          {user ? (
             <button onClick={logout} className="text-gray-400 hover:text-white transition">
               Logout
             </button>
@@ -182,7 +199,16 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen, setMobileMenu
           <span>Health Timeline</span>
         </NavLink>
         
-        {isLoggedIn ? (
+        <NavLink 
+          to="/voice-companion"
+          className={`block py-2 text-gray-400 hover:text-white transition ${location.pathname === '/voice-companion' ? 'text-white' : ''}`}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <Mic size={20} />
+          <span>Voice Assistant</span>
+        </NavLink>
+        
+        {user ? (
           <button onClick={logout} className="block py-2 text-gray-400 hover:text-white transition">
             Logout
           </button>

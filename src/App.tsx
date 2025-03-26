@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -13,6 +14,7 @@ import Layout from './components/layout/Layout';
 import { Toaster } from 'sonner';
 import { supabase } from './integrations/supabase/client';
 import HealthTimeline from "./pages/HealthTimeline";
+import VoiceCompanion from "./pages/VoiceCompanion";
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -93,6 +95,9 @@ const App = () => {
             
             {/* Health Timeline Dashboard */}
             <Route path="/health-timeline" element={<HealthTimeline />} />
+            
+            {/* Voice Wellness Companion */}
+            <Route path="/voice-companion" element={<VoiceCompanion />} />
             
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
