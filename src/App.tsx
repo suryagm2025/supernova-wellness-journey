@@ -30,8 +30,8 @@ const App = () => {
   }, [])
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Layout>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -102,9 +102,9 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Layout>
-      </BrowserRouter>
-      <Toaster />
-    </AuthProvider>
+        <Toaster />
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 
