@@ -23,6 +23,9 @@ import ResetPassword from '@/pages/ResetPassword';
 import Streak from '@/pages/Streak';
 import EmotionCheck from '@/pages/EmotionCheck';
 import FAQ from '@/pages/FAQ';
+import Programs from '@/pages/Programs';
+import Blog from '@/pages/Blog';
+import NotFound from '@/pages/NotFound';
 import TimelineDashboard from '@/pages/TimelineDashboard';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
@@ -46,6 +49,8 @@ const router = createBrowserRouter(
       <Route path="/streak" element={<Streak />} />
       <Route path="/emotion-check" element={<EmotionCheck />} />
       <Route path="/faq" element={<FAQ />} />
+      <Route path="/programs" element={<Programs />} />
+      <Route path="/blog" element={<Blog />} />
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
@@ -57,6 +62,9 @@ const router = createBrowserRouter(
         <Route path="/water" element={<WaterIntake />} />
         <Route path="/suggestions" element={<Suggestions />} />
       </Route>
+      
+      {/* Not found route */}
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
