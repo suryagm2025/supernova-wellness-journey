@@ -10,8 +10,8 @@ import Logo from '@/components/ui/Logo';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-const SignUp = () => {
-  const [fullName, setFullName] = useState('');
+const Signup = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,26 +25,32 @@ const SignUp = () => {
     }
   }, [user, navigate]);
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password || !fullName) {
-      toast.error('Please fill out all fields');
+    if (!name || !email || !password) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
       return;
     }
     
     setIsLoading(true);
     
     try {
-      await signUp(email, password, { full_name: fullName });
-      // Redirection handled by AuthContext
+      await signUp(email, password, { full_name: name });
+      // Further handling in AuthContext
     } catch (error) {
-      // Error handling done in AuthContext
+      // Error handling in AuthContext
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSignUp = async () => {
+  const handleGoogleSignup = async () => {
     try {
       await signInWithGoogle();
       // Redirection handled by Google OAuth flow
@@ -60,28 +66,27 @@ const SignUp = () => {
           <div className="flex justify-center mb-6">
             <Logo size="lg" withText={true} />
           </div>
-          <h2 className="text-3xl font-display font-bold">Join Supernova</h2>
-          <p className="text-gray-400 mt-2">Create an account to begin your wellness journey</p>
+          <h2 className="text-3xl font-display font-bold">Join SuperiNova AI</h2>
+          <p className="text-gray-400 mt-2">Create your account to start your wellness journey</p>
         </div>
         
         <Card className="glass-panel border-white/10">
           <CardHeader>
             <CardTitle className="text-xl">Create Account</CardTitle>
-            <CardDescription>Fill in your details to get started</CardDescription>
+            <CardDescription>Enter your details to sign up</CardDescription>
           </CardHeader>
           
           <CardContent>
-            <form onSubmit={handleSignUp} className="space-y-4">
+            <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Your name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    id="name"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="pl-10"
                     autoComplete="name"
                   />
@@ -118,14 +123,12 @@ const SignUp = () => {
                     autoComplete="new-password"
                   />
                 </div>
-                <p className="text-xs text-gray-400">
-                  Must be at least 8 characters and include a number
-                </p>
+                <p className="text-xs text-muted-foreground">Must be at least 6 characters</p>
               </div>
               
               <Button 
                 type="submit" 
-                className="w-full cosmic-glow-blue" 
+                className="w-full cosmic-glow-purple" 
                 disabled={isLoading}
               >
                 {isLoading ? 'Creating account...' : 'Create Account'}
@@ -146,7 +149,7 @@ const SignUp = () => {
               <Button 
                 variant="outline" 
                 className="w-full mt-4" 
-                onClick={handleGoogleSignUp}
+                onClick={handleGoogleSignup}
                 type="button"
               >
                 <img src="/google.svg" alt="Google" className="h-4 w-4 mr-2" />
@@ -164,9 +167,16 @@ const SignUp = () => {
             </p>
           </CardFooter>
         </Card>
+        
+        <p className="text-center text-xs text-gray-500">
+          By creating an account, you agree to our{' '}
+          <Link to="/terms" className="text-supernova-blue hover:underline">Terms of Use</Link>
+          {' '}and{' '}
+          <Link to="/privacy" className="text-supernova-blue hover:underline">Privacy Policy</Link>
+        </p>
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default Signup;

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { format, isYesterday, isToday } from 'date-fns';
@@ -16,7 +16,6 @@ export const useStreak = () => {
   const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
-  const { toast } = useToast();
   const { user } = useAuth();
 
   // Fetch the user's streak data
@@ -26,27 +25,7 @@ export const useStreak = () => {
     try {
       setIsLoading(true);
       
-      // Check if streak_tracking table exists
-      const { data: tableExists } = await supabase
-        .from('streak_tracking')
-        .select('count')
-        .limit(1)
-        .single();
-      
-      if (!tableExists) {
-        console.log('Creating streak_tracking table...');
-        // Table doesn't exist yet, let's create mock data for now
-        setStreakData({
-          id: 'mock-id',
-          currentStreak: 0,
-          longestStreak: 0,
-          lastCheckIn: null
-        });
-        setIsLoading(false);
-        return;
-      }
-      
-      // First check if the user has streak data
+      // Get streak data for the current user
       const { data, error } = await supabase
         .from('streak_tracking')
         .select('*')
@@ -59,12 +38,25 @@ export const useStreak = () => {
       
       // If no data exists, create a new streak record
       if (!data) {
-        // Mock the data creation since we can't actually create it without the table
+        const { data: newStreak, error: insertError } = await supabase
+          .from('streak_tracking')
+          .insert({
+            user_id: user.id,
+            current_streak: 0,
+            longest_streak: 0,
+            last_check_in: null
+          })
+          .select()
+          .single();
+        
+        if (insertError) throw insertError;
+        
+        // Transform the data to our format
         setStreakData({
-          id: 'new-streak-id',
-          currentStreak: 0,
-          longestStreak: 0,
-          lastCheckIn: null
+          id: newStreak.id,
+          currentStreak: newStreak.current_streak,
+          longestStreak: newStreak.longest_streak,
+          lastCheckIn: newStreak.last_check_in
         });
         
         return;
@@ -73,8 +65,8 @@ export const useStreak = () => {
       // If data exists, transform it to our format
       setStreakData({
         id: data.id,
-        currentStreak: data.current_streak || 0,
-        longestStreak: data.longest_streak || 0,
+        currentStreak: data.current_streak,
+        longestStreak: data.longest_streak,
         lastCheckIn: data.last_check_in
       });
       
@@ -92,11 +84,7 @@ export const useStreak = () => {
       
     } catch (error: any) {
       console.error('Error fetching streak data:', error);
-      toast({
-        title: "Couldn't load streak data",
-        description: error.message || "Please try again later",
-        duration: 3000,
-      });
+      toast.error("Couldn't load streak data. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -146,7 +134,20 @@ export const useStreak = () => {
         newMessage = "Congratulations on your first check-in! This is the start of your wellness journey.";
       }
       
-      // Since we don't have the actual table, just update our local state for now
+      // Update the streak in the database
+      const { error } = await supabase
+        .from('streak_tracking')
+        .update({
+          current_streak: newStreak,
+          longest_streak: Math.max(newStreak, streakData.longestStreak),
+          last_check_in: formattedToday,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', streakData.id);
+      
+      if (error) throw error;
+      
+      // Update local state
       setStreakData({
         ...streakData,
         currentStreak: newStreak,
@@ -156,21 +157,13 @@ export const useStreak = () => {
       
       if (newMessage) {
         setMessage(newMessage);
-        toast({
-          title: "Streak Updated",
-          description: newMessage,
-          duration: 5000,
-        });
+        toast.success(newMessage);
       }
       
       return true;
     } catch (error: any) {
       console.error('Error recording check-in:', error);
-      toast({
-        title: "Couldn't log your check-in",
-        description: "Try refreshing or tapping again. If the issue continues, hit the 'Help' button.",
-        duration: 3000,
-      });
+      toast.error("Couldn't log your check-in. Please try again later.");
       return false;
     }
   };

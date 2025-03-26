@@ -131,6 +131,36 @@ export type Database = {
           },
         ]
       }
+      streak_tracking: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_check_in: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_check_in?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_check_in?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       water_intake: {
         Row: {
           amount_ml: number
