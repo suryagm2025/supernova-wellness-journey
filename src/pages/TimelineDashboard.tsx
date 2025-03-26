@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Chart } from 'lucide-react';
+import { ChartLine } from 'lucide-react';
 import TimelineHeader from '@/components/timeline/TimelineHeader';
 import TimelineStats from '@/components/timeline/TimelineStats';
 import TimelineInsights from '@/components/timeline/TimelineInsights';
@@ -30,7 +29,7 @@ const TimelineDashboard = () => {
               {isLoading ? (
                 <div className="flex items-center justify-center h-80">
                   <div className="animate-pulse flex flex-col items-center">
-                    <Chart size={48} className="text-supernova-blue/50 mb-4" />
+                    <ChartLine size={48} className="text-supernova-blue/50 mb-4" />
                     <p className="text-gray-400">Loading your wellness timeline...</p>
                   </div>
                 </div>

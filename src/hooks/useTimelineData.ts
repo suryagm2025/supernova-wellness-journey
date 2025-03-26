@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -99,13 +98,21 @@ const useTimelineData = () => {
         const moodEntry = wellnessData?.find(w => 
           w.created_at.startsWith(date) && w.type === 'mood'
         );
-        const mood = moodEntry?.value?.rating || null;
+        // Fix the type error by safely accessing the value property
+        const moodValue = moodEntry?.value;
+        const mood = typeof moodValue === 'object' && moodValue !== null 
+          ? (moodValue as Record<string, any>).rating || null 
+          : null;
         
         // Get movement/activity from wellness entries
         const activityEntry = wellnessData?.find(w => 
           w.created_at.startsWith(date) && w.type === 'activity'
         );
-        const movement = activityEntry?.value?.duration || null;
+        // Fix the type error by safely accessing the value property
+        const activityValue = activityEntry?.value;
+        const movement = typeof activityValue === 'object' && activityValue !== null 
+          ? (activityValue as Record<string, any>).duration || null 
+          : null;
         
         return {
           date,
