@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -15,11 +15,6 @@ import { Toaster } from 'sonner';
 import { supabase } from './integrations/supabase/client';
 import HealthTimeline from "./pages/HealthTimeline";
 import VoiceCompanion from "./pages/VoiceCompanion";
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import NotFound from './pages/NotFound';
-import AuthCallback from './pages/AuthCallback';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -35,35 +30,92 @@ const App = () => {
   }, [])
 
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <Layout>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/suggestions"
+              element={
+                <PrivateRoute>
+                  <Suggestions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/water"
+              element={
+                <PrivateRoute>
+                  <WaterIntake />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/emotion-check"
+              element={
+                <PrivateRoute>
+                  <EmotionCheck />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/evening-check"
+              element={
+                <PrivateRoute>
+                  <EveningCheck />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/activity"
+              element={
+                <PrivateRoute>
+                  <Activity />
+                </PrivateRoute>
+              }
+            />
             
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/suggestions" element={<Suggestions />} />
-              <Route path="/water" element={<WaterIntake />} />
-              <Route path="/emotion-check" element={<EmotionCheck />} />
-              <Route path="/evening-check" element={<EveningCheck />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/health-timeline" element={<HealthTimeline />} />
-              <Route path="/voice-companion" element={<VoiceCompanion />} />
-            </Route>
+            {/* Health Timeline Dashboard */}
+            <Route path="/health-timeline" element={<HealthTimeline />} />
             
-            <Route path="*" element={<NotFound />} />
+            {/* Voice Wellness Companion */}
+            <Route path="/voice-companion" element={<VoiceCompanion />} />
+            
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Layout>
-        <Toaster />
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+      <Toaster />
+    </AuthProvider>
   );
 };
+
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+
+  return user ? (
+    children
+  ) : (
+    <Navigate to="/login" />
+  );
+}
 
 export default App;
