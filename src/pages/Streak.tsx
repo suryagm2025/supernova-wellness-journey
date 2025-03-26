@@ -1,12 +1,12 @@
 
 import React from 'react';
 import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import StreakDashboard from '../components/streak/StreakDashboard';
 import { Flame } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import Layout from '@/components/layout/Layout';
 
 const Streak = () => {
   const { user } = useAuth();
@@ -24,8 +24,10 @@ const Streak = () => {
   }
   
   return (
-    <Layout>
-      <div className="pt-8 pb-20">
+    <div className="min-h-screen">
+      <Header />
+      
+      <main className="pt-28 pb-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <div className="inline-flex items-center justify-center bg-supernova-blue/20 p-3 rounded-full mb-4">
@@ -66,8 +68,10 @@ const Streak = () => {
             </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 
