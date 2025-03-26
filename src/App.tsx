@@ -34,6 +34,7 @@ import CookiePolicy from '@/pages/CookiePolicy';
 import TimeBasedFlow from '@/components/timeflows/TimeBasedFlow';
 import MorningCheckInPopup from '@/components/checkIn/MorningCheckInPopup';
 import ForgotPassword from '@/pages/ForgotPassword';
+import AuthCallback from '@/pages/AuthCallback';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -47,26 +48,52 @@ const AppRoot = () => {
   );
 };
 
+// Define public routes with Layout component
+const PublicLayout = () => {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  );
+};
+
+// Protected routes with Layout component
+const ProtectedLayout = () => {
+  return (
+    <Layout>
+      <ProtectedRoute>
+        <Outlet />
+      </ProtectedRoute>
+    </Layout>
+  );
+};
+
 // Define routes using createRoutesFromElements
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AppRoot />}>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/streak" element={<Streak />} />
-      <Route path="/emotion-check" element={<EmotionCheck />} />
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/programs" element={<Programs />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/terms" element={<TermsOfUse />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/cookie-policy" element={<CookiePolicy />} />
+      {/* Public routes with Layout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/streak" element={<Streak />} />
+        <Route path="/emotion-check" element={<EmotionCheck />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/programs" element={<Programs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/terms" element={<TermsOfUse />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
+      </Route>
       
-      {/* Protected routes */}
-      <Route element={<ProtectedRoute />}>
+      {/* Special auth callback route without layout */}
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      
+      {/* Protected routes with Layout */}
+      <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/timeline" element={<TimelineDashboard />} />
         <Route path="/account" element={<Account />} />
