@@ -5,9 +5,11 @@ import NavLink from './NavLink';
 import { 
   Home, 
   LayoutDashboard, 
-  ListChecks, 
-  Droplet,
+  BookText,
+  HelpCircle,
+  LineChart,
   Brain,
+  Droplet,
   Moon,
   Activity,
   Calendar, 
@@ -27,6 +29,18 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ user, signOut }) 
     <div className="hidden md:flex items-center space-x-4">
       <NavLink to="/" icon={Home}>
         Home
+      </NavLink>
+      
+      <NavLink to="/programs" icon={LineChart}>
+        Programs
+      </NavLink>
+      
+      <NavLink to="/blog" icon={BookText}>
+        Blog
+      </NavLink>
+      
+      <NavLink to="/faq" icon={HelpCircle}>
+        FAQ
       </NavLink>
       
       {user ? (

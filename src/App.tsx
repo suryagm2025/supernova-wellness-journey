@@ -20,6 +20,9 @@ import ResetPassword from './pages/ResetPassword';
 import AuthCallback from './pages/AuthCallback';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import Home from './pages/Home';
+import Programs from './pages/Programs';
+import Blog from './pages/Blog';
+import FAQ from './pages/FAQ';
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -37,32 +40,33 @@ const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Layout>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/signup" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/suggestions" element={<Suggestions />} />
-              <Route path="/water" element={<WaterIntake />} />
-              <Route path="/emotion-check" element={<EmotionCheck />} />
-              <Route path="/evening-check" element={<EveningCheck />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/health-timeline" element={<HealthTimeline />} />
-              <Route path="/voice-companion" element={<VoiceCompanion />} />
-            </Route>
-            
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/faq" element={<FAQ />} />
+          
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/suggestions" element={<Suggestions />} />
+            <Route path="/water" element={<WaterIntake />} />
+            <Route path="/emotion-check" element={<EmotionCheck />} />
+            <Route path="/evening-check" element={<EveningCheck />} />
+            <Route path="/activity" element={<Activity />} />
+            <Route path="/health-timeline" element={<HealthTimeline />} />
+            <Route path="/voice-companion" element={<VoiceCompanion />} />
+          </Route>
+          
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
         <Toaster />
       </AuthProvider>
     </BrowserRouter>

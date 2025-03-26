@@ -1,11 +1,14 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Home, 
   LayoutDashboard, 
-  ListChecks, 
-  Droplet,
+  BookText,
+  HelpCircle,
+  LineChart,
   Brain,
+  Droplet,
   Moon,
   Activity,
   Calendar, 
@@ -48,6 +51,27 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ isOpen, setIsOpen, 
             <span className="flex items-center gap-2">
               <Home className="h-5 w-5" />
               Home
+            </span>
+          </Link>
+          
+          <Link to="/programs" className="text-white hover:text-supernova-blue transition" onClick={() => setIsOpen(false)}>
+            <span className="flex items-center gap-2">
+              <LineChart className="h-5 w-5" />
+              Programs
+            </span>
+          </Link>
+          
+          <Link to="/blog" className="text-white hover:text-supernova-blue transition" onClick={() => setIsOpen(false)}>
+            <span className="flex items-center gap-2">
+              <BookText className="h-5 w-5" />
+              Blog
+            </span>
+          </Link>
+          
+          <Link to="/faq" className="text-white hover:text-supernova-blue transition" onClick={() => setIsOpen(false)}>
+            <span className="flex items-center gap-2">
+              <HelpCircle className="h-5 w-5" />
+              FAQ
             </span>
           </Link>
           

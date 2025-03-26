@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import DesktopNavigation from './navigation/DesktopNavigation';
 import MobileNavigation from './navigation/MobileNavigation';
+import Logo from '../ui/Logo';
 
 interface NavigationProps {
   isMobileMenuOpen: boolean;
@@ -18,7 +19,11 @@ const Navigation: React.FC<NavigationProps> = ({
   const { user, signOut } = useAuth();
 
   return (
-    <nav>
+    <nav className="flex items-center justify-between w-full">
+      <div className="flex items-center">
+        <Logo size="md" withText={true} />
+      </div>
+      
       <DesktopNavigation 
         user={user} 
         signOut={signOut} 

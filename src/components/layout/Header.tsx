@@ -7,6 +7,7 @@ import Navigation from './Navigation';
 import UserMenu from './UserMenu';
 import NotificationMenu from './NotificationMenu';
 import AuthButtons from './AuthButtons';
+import { Menu } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,19 +44,22 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="md:hidden">
-              <Logo size="md" />
-            </div>
-            <div className="hidden md:block">
-              <Logo size="md" withText={true} />
-            </div>
-            
+          <div className="hidden md:flex items-center space-x-10 w-full">
             <Navigation 
               isPublicPage={isPublicPage}
               isMobileMenuOpen={isMobileMenuOpen}
               setMobileMenuOpen={setMobileMenuOpen}
             />
+          </div>
+          
+          <div className="md:hidden flex items-center">
+            <Logo size="md" />
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="ml-4 text-white p-2 focus:outline-none"
+            >
+              <Menu size={24} />
+            </button>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -65,11 +69,13 @@ const Header: React.FC = () => {
                 <UserMenu user={user} />
               </>
             ) : (
-              <AuthButtons 
-                isPublicPage={isPublicPage} 
-                isOnDashboard={isOnDashboard} 
-                currentPath={location.pathname} 
-              />
+              <div className="hidden md:block">
+                <AuthButtons 
+                  isPublicPage={isPublicPage} 
+                  isOnDashboard={isOnDashboard} 
+                  currentPath={location.pathname} 
+                />
+              </div>
             )}
           </div>
         </div>
