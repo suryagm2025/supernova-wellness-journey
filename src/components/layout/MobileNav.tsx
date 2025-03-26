@@ -28,7 +28,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isPublicPage }) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
+        <Button variant="ghost" size="icon" className="p-2">
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle menu</span>
         </Button>
@@ -41,59 +41,57 @@ const MobileNav: React.FC<MobileNavProps> = ({ isPublicPage }) => {
           </Button>
         </div>
         
-        {!isPublicPage && (
-          <div className="flex flex-col space-y-3">
-            <Link 
-              to="/" 
-              className={`mobile-nav-link ${isActive('/') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/dashboard" 
-              className={`mobile-nav-link ${isActive('/dashboard') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Dashboard
-            </Link>
-            <Link 
-              to="/programs" 
-              className={`mobile-nav-link ${isActive('/programs') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Programs
-            </Link>
-            <Link 
-              to="/streak" 
-              className={`mobile-nav-link flex items-center ${isActive('/streak') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Streak <Flame size={16} className="ml-1 text-supernova-blue" />
-            </Link>
-            <Link 
-              to="/emotion-check" 
-              className={`mobile-nav-link flex items-center ${isActive('/emotion-check') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Mood <SmilePlus size={16} className="ml-1 text-supernova-pink" />
-            </Link>
-            <Link 
-              to="/blog" 
-              className={`mobile-nav-link ${isActive('/blog') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              Blog
-            </Link>
-            <Link 
-              to="/faq" 
-              className={`mobile-nav-link ${isActive('/faq') ? 'text-supernova-blue' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              FAQ
-            </Link>
-          </div>
-        )}
+        <div className="flex flex-col space-y-3">
+          <Link 
+            to="/" 
+            className={`mobile-nav-link ${isActive('/') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Home
+          </Link>
+          <Link 
+            to="/dashboard" 
+            className={`mobile-nav-link ${isActive('/dashboard') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Dashboard
+          </Link>
+          <Link 
+            to="/programs" 
+            className={`mobile-nav-link ${isActive('/programs') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Programs
+          </Link>
+          <Link 
+            to="/streak" 
+            className={`mobile-nav-link flex items-center ${isActive('/streak') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Streak <Flame size={16} className="ml-1 text-supernova-blue" />
+          </Link>
+          <Link 
+            to="/emotion-check" 
+            className={`mobile-nav-link flex items-center ${isActive('/emotion-check') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Mood <SmilePlus size={16} className="ml-1 text-supernova-pink" />
+          </Link>
+          <Link 
+            to="/blog" 
+            className={`mobile-nav-link ${isActive('/blog') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            Blog
+          </Link>
+          <Link 
+            to="/faq" 
+            className={`mobile-nav-link ${isActive('/faq') ? 'text-supernova-blue' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            FAQ
+          </Link>
+        </div>
         
         <div className="absolute bottom-8 w-full pr-6">
           <div className="border-t border-[#2A2A30] pt-4 mt-4">

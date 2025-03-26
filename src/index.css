@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,5 +97,16 @@
   
   .nav-link.active {
     @apply text-supernova-blue font-medium;
+  }
+}
+
+/* Add this to make sure mobile menu works properly */
+.sheet-content {
+  z-index: 50 !important;
+}
+
+@media (max-width: 768px) {
+  .sheet-trigger {
+    display: block !important;
   }
 }

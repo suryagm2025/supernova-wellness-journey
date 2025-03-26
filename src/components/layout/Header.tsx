@@ -55,20 +55,26 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <MobileNav isPublicPage={isPublicPage} />
+            {/* Mobile menu button - visible on mobile only */}
+            <div className="md:hidden">
+              <MobileNav isPublicPage={isPublicPage} />
+            </div>
             
-            {user && isOnDashboard ? (
-              <>
-                <NotificationMenu />
-                <UserMenu user={user} />
-              </>
-            ) : (
-              <AuthButtons 
-                isPublicPage={isPublicPage} 
-                isOnDashboard={isOnDashboard} 
-                currentPath={location.pathname} 
-              />
-            )}
+            {/* Desktop menu items - visible on desktop only */}
+            <div className="hidden md:flex items-center space-x-4">
+              {user && isOnDashboard ? (
+                <>
+                  <NotificationMenu />
+                  <UserMenu user={user} />
+                </>
+              ) : (
+                <AuthButtons 
+                  isPublicPage={isPublicPage} 
+                  isOnDashboard={isOnDashboard} 
+                  currentPath={location.pathname} 
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
