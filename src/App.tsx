@@ -52,18 +52,18 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AppRoot />}>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Layout><Login /></Layout>} />
-      <Route path="/signup" element={<Layout><SignUp /></Layout>} />
-      <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
-      <Route path="/reset-password" element={<Layout><ResetPassword /></Layout>} />
-      <Route path="/streak" element={<Layout><Streak /></Layout>} />
-      <Route path="/emotion-check" element={<Layout><EmotionCheck /></Layout>} />
-      <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-      <Route path="/programs" element={<Layout><Programs /></Layout>} />
-      <Route path="/blog" element={<Layout><Blog /></Layout>} />
-      <Route path="/terms" element={<Layout><TermsOfUse /></Layout>} />
-      <Route path="/privacy" element={<Layout><PrivacyPolicy /></Layout>} />
-      <Route path="/cookie-policy" element={<Layout><CookiePolicy /></Layout>} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/streak" element={<Streak />} />
+      <Route path="/emotion-check" element={<EmotionCheck />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/programs" element={<Programs />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/terms" element={<TermsOfUse />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/cookie-policy" element={<CookiePolicy />} />
       
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
