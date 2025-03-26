@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -79,7 +80,6 @@ export default {
                 sans: ['Inter', 'sans-serif'],
                 display: ['Rajdhani', 'sans-serif'],
                 mono: ['JetBrains Mono', 'monospace'],
-				'playfair': ['Playfair Display', 'serif'],
             },
 			keyframes: {
 				'accordion-down': {
@@ -96,11 +96,11 @@ export default {
                 },
                 'pulse-glow': {
                     '0%, 100%': { 
-                        opacity: '0.7',
+                        opacity: '1',
                         filter: 'brightness(1)'
                     },
                     '50%': { 
-                        opacity: '1',
+                        opacity: '0.8',
                         filter: 'brightness(1.2)'
                     }
                 },
@@ -131,15 +131,7 @@ export default {
                 'orbit': {
                     '0%': { transform: 'rotate(0deg) translateX(10px) rotate(0deg)' },
                     '100%': { transform: 'rotate(360deg) translateX(10px) rotate(-360deg)' }
-                },
-				'ripple': {
-					'0%': { transform: 'scale(1)', opacity: '0.4' },
-					'100%': { transform: 'scale(4)', opacity: '0' }
-				},
-				'float-soft': {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-8px)' }
-				}
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -152,9 +144,7 @@ export default {
                 'fade-in-right': 'fade-in-right 0.5s ease-out',
                 'slide-up': 'slide-up 0.5s ease-out',
                 'scale-in': 'scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                'orbit': 'orbit 8s linear infinite',
-				'ripple': 'ripple 3s ease-out infinite',
-				'float-soft': 'float-soft 6s ease-in-out infinite',
+                'orbit': 'orbit 8s linear infinite'
 			},
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
