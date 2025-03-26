@@ -7,6 +7,7 @@ import Navigation from './Navigation';
 import UserMenu from './UserMenu';
 import NotificationMenu from './NotificationMenu';
 import AuthButtons from './AuthButtons';
+import MobileNav from './MobileNav';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,6 +55,8 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+            <MobileNav isPublicPage={isPublicPage} />
+            
             {user && isOnDashboard ? (
               <>
                 <NotificationMenu />
