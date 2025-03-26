@@ -7,7 +7,9 @@ import {
   ListChecks, 
   Flame,
   Calendar, 
-  Mic
+  Mic,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { User } from '@supabase/supabase-js';
 
@@ -49,10 +51,10 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ user, signOut }) 
         </button>
       ) : (
         <>
-          <NavLink to="/login" icon={() => null}>
+          <NavLink to="/login" icon={LogIn}>
             Login
           </NavLink>
-          <NavLink to="/register" icon={() => null}>
+          <NavLink to="/register" icon={UserPlus}>
             Register
           </NavLink>
         </>
