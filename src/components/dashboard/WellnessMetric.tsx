@@ -1,48 +1,58 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import GlassMorphicCard from '../ui/GlassMorphicCard';
+import { Progress } from '../ui/progress';
+import { Button } from '../ui/button';
+import { ArrowUpRight } from 'lucide-react';
 
-interface WellnessMetricProps {
-  title: string;
-  value: string | number;
+export interface WellnessMetricProps {
   icon: React.ReactNode;
-  change?: {
-    value: number;
-    isPositive: boolean;
-  };
-  className?: string;
-  glowColor?: 'blue' | 'purple' | 'pink' | 'none';
+  title: string;
+  current: number;
+  goal: number;
+  unit: string;
+  href: string;
 }
 
 const WellnessMetric: React.FC<WellnessMetricProps> = ({
-  title,
-  value,
   icon,
-  change,
-  className,
-  glowColor = 'blue'
+  title,
+  current,
+  goal,
+  unit,
+  href
 }) => {
+  const navigate = useNavigate();
+  const percentage = Math.min(Math.round((current / goal) * 100), 100);
+  
   return (
-    <GlassMorphicCard className={cn('p-6', className)} glowColor={glowColor}>
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-gray-400 text-sm">{title}</p>
-          <h4 className="text-2xl font-display font-semibold mt-1">{value}</h4>
-          
-          {change && (
-            <div className={`flex items-center mt-2 ${change.isPositive ? 'text-green-400' : 'text-red-400'}`}>
-              <span className="text-xs font-medium">
-                {change.isPositive ? '+' : ''}{change.value}%
-              </span>
-              <span className="text-xs text-gray-400 ml-1">vs. yesterday</span>
-            </div>
-          )}
-        </div>
-        
-        <div className="p-3 rounded-lg bg-white/5">
+    <GlassMorphicCard className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
           {icon}
+          <h3 className="font-display text-lg">{title}</h3>
         </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8 rounded-full hover:bg-white/10"
+          onClick={() => navigate(href)}
+        >
+          <ArrowUpRight size={16} />
+        </Button>
+      </div>
+      
+      <div className="mb-4">
+        <div className="flex justify-between items-end mb-1.5">
+          <div className="text-2xl font-display">
+            {current} <span className="text-sm text-gray-400">{unit}</span>
+          </div>
+          <div className="text-sm text-gray-400">
+            Goal: {goal} {unit}
+          </div>
+        </div>
+        <Progress value={percentage} className="h-2" />
       </div>
     </GlassMorphicCard>
   );

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   createBrowserRouter,
@@ -7,10 +8,10 @@ import {
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import Layout from '@/components/layout/Layout';
-import Home from '@/pages/Home';
+import Home from './pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import Login from '@/pages/Login';
-import SignUp from '@/pages/SignUp';
+import SignUp from './pages/SignUp';
 import Account from '@/pages/Account';
 import Settings from '@/pages/Settings';
 import CheckIn from '@/pages/CheckIn';
