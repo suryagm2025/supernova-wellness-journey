@@ -1,8 +1,5 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,8 +11,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <Header />
-      
       {/* Hero Section with smooth gradient background */}
       <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-blue-900/20">
         <div className="container mx-auto px-4 relative z-10">
@@ -417,7 +412,7 @@ const Index = () => {
         </div>
       </section>
       
-      <Footer />
+      {/* Removed Footer component from here */}
     </div>
   );
 };
