@@ -18,6 +18,12 @@ const Suggestions = () => {
               Personalized recommendations powered by AI to optimize your wellness journey
               <Sparkles size={16} className="text-supernova-pink" />
             </p>
+            
+            <div className="mt-6 max-w-xl mx-auto p-4 rounded-lg bg-white/5 border border-white/10">
+              <p className="text-white">
+                "Based on my recent mood, hydration, and sleep data, what's your wellness suggestion for me today?"
+              </p>
+            </div>
           </div>
           
           <WellnessSuggestions />

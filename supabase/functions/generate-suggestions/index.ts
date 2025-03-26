@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7';
@@ -19,7 +18,7 @@ serve(async (req) => {
   }
 
   try {
-    const { userId } = await req.json();
+    const { userId, wellnessData } = await req.json();
     
     if (!userId) {
       return new Response(JSON.stringify({ error: 'User ID is required' }), {
@@ -46,31 +45,47 @@ serve(async (req) => {
       });
     }
 
-    // Get recent wellness entries
-    const { data: entries, error: entriesError } = await supabase
-      .from('wellness_entries')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(20);
+    let wellnessEntries;
     
-    if (entriesError) {
-      console.error('Error fetching entries:', entriesError);
-      return new Response(JSON.stringify({ error: 'Error fetching wellness entries' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // If wellnessData is provided, use it (for smart suggestions)
+    if (wellnessData) {
+      wellnessEntries = wellnessData;
+    } else {
+      // Otherwise, get recent wellness entries (for regular suggestions)
+      const { data: entries, error: entriesError } = await supabase
+        .from('wellness_entries')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      
+      if (entriesError) {
+        console.error('Error fetching entries:', entriesError);
+        return new Response(JSON.stringify({ error: 'Error fetching wellness entries' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      wellnessEntries = entries;
     }
 
     // Apply basic rules-based logic first
-    const basicSuggestions = generateBasicSuggestions(entries);
+    const basicSuggestions = generateBasicSuggestions(wellnessEntries);
+    
+    // Check if we're generating smart suggestions
+    let smartSuggestions = null;
+    if (wellnessData) {
+      smartSuggestions = await generateSmartSuggestions(profile, wellnessData);
+    }
     
     // Use OpenAI to refine and personalize the suggestions
-    const aiSuggestions = await generateAISuggestions(profile, entries, basicSuggestions);
+    const aiSuggestions = await generateAISuggestions(profile, wellnessEntries, basicSuggestions);
     
     return new Response(JSON.stringify({ 
       suggestions: aiSuggestions,
-      basicSuggestions: basicSuggestions
+      basicSuggestions: basicSuggestions,
+      smartSuggestions: smartSuggestions
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -82,6 +97,113 @@ serve(async (req) => {
     });
   }
 });
+
+// Generate smart suggestions based on user wellness data
+async function generateSmartSuggestions(profile, wellnessData) {
+  try {
+    // Extract relevant data for analysis
+    const waterData = wellnessData.water || [];
+    const sleepData = wellnessData.sleep || [];
+    const moodData = wellnessData.mood || [];
+    
+    // Default suggestions if we can't generate personalized ones
+    let mealSuggestion = "A balanced meal with protein, whole grains, and vegetables";
+    let breathworkSuggestion = "5 minutes of deep breathing - inhale for 4, hold for 4, exhale for 6";
+    let movementSuggestion = "A 15-minute walk outdoors for fresh air and gentle movement";
+    let hydrationTip = null;
+    
+    // Analyze water intake
+    const hasGoodHydration = waterData.length > 0 && 
+      waterData.reduce((sum, entry) => sum + entry.amount_ml, 0) > 1500;
+    
+    if (hasGoodHydration) {
+      hydrationTip = "You've been hydrating well – consider adding lemon or mint to keep it fun!";
+    }
+    
+    // Generate personalized suggestions based on OpenAI
+    if (openAIApiKey) {
+      const userData = {
+        profile: {
+          age: profile.age,
+          gender: profile.gender,
+          preferences: profile.preferences
+        },
+        water: waterData,
+        sleep: sleepData,
+        mood: moodData
+      };
+      
+      const userDataString = JSON.stringify(userData, null, 2);
+      
+      const prompt = `
+You are a nutrition and wellness AI assistant. Based on the following user wellness data:
+
+${userDataString}
+
+Generate personalized wellness suggestions in these three areas:
+
+1. A meal suggestion based on their energy needs and activity level
+2. A specific breathwork exercise based on their stress/mood level
+3. A movement/exercise suggestion based on their sleep/recovery data
+
+Keep each suggestion concise (20-25 words max) but specific.
+Format your response as a valid JSON with these exact keys:
+{
+  "meal": "your meal suggestion",
+  "breathwork": "your breathwork suggestion",
+  "movement": "your movement suggestion"
+}
+
+Only include the JSON in your response, no other text.
+`;
+      
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: 'You are a wellness coach assistant that provides evidence-based health recommendations.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.choices && data.choices[0]) {
+        try {
+          const aiContent = data.choices[0].message.content;
+          const jsonMatch = aiContent.match(/\{[\s\S]*\}/);
+          const jsonString = jsonMatch ? jsonMatch[0] : aiContent;
+          const parsedSuggestions = JSON.parse(jsonString);
+          
+          // Override our default suggestions with AI ones
+          mealSuggestion = parsedSuggestions.meal || mealSuggestion;
+          breathworkSuggestion = parsedSuggestions.breathwork || breathworkSuggestion;
+          movementSuggestion = parsedSuggestions.movement || movementSuggestion;
+        } catch (error) {
+          console.error('Error parsing AI response:', error);
+        }
+      }
+    }
+    
+    return {
+      meal: mealSuggestion,
+      breathwork: breathworkSuggestion,
+      movement: movementSuggestion,
+      hydrationTip: hydrationTip
+    };
+  } catch (error) {
+    console.error('Error generating smart suggestions:', error);
+    return null;
+  }
+}
 
 // Generate basic rule-based suggestions
 function generateBasicSuggestions(entries) {

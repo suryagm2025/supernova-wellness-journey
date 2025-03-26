@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import SuggestionsHeader from './SuggestionsHeader';
 import SuggestionsLoader from './SuggestionsLoader';
 import SuggestionsGrid from './SuggestionsGrid';
+import SmartSuggestions from './SmartSuggestions';
 import { useSuggestions } from './useSuggestions';
 
 const WellnessSuggestions: React.FC = () => {
@@ -19,6 +20,9 @@ const WellnessSuggestions: React.FC = () => {
         refreshing={refreshing} 
         onRefresh={handleRefresh} 
       />
+
+      {/* AI-Powered Smart Suggestions */}
+      <SmartSuggestions />
 
       {isLoading ? (
         <SuggestionsLoader />
