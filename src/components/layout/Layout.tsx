@@ -19,12 +19,6 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
   const { user, signOut } = useAuth();
   const isMobile = useIsMobile();
   
-  // Check if we're on any public page
-  const isPublicPage = ['/', '/login', '/signup', '/forgot-password', '/reset-password', '/faq', '/privacy', '/terms', '/cookie-policy', '/streak', '/emotion-check'].includes(location.pathname);
-
-  // Only show sidebar on dashboard pages
-  const showSidebar = !isPublicPage;
-
   // Get user initials for avatar
   const getUserInitials = () => {
     if (!user) return 'U';
@@ -47,46 +41,34 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
   };
 
   return (
-    <div className="min-h-screen flex w-full">
-      {showSidebar ? (
-        <SidebarProvider>
-          <AppSidebar 
-            handleLogout={handleLogout} 
-            getUserInitials={getUserInitials} 
-          />
-          
-          <SidebarInset className="w-full">
-            <div className="flex flex-col min-h-screen w-full">
-              {showSidebar && (
-                <div className="flex items-center md:hidden p-4 z-50 absolute top-0 left-0">
-                  <SidebarTrigger />
-                </div>
-              )}
-              <Header />
-              <main className="flex-1 container mx-auto px-4 py-8 mt-16">
-                {children || <Outlet />}
-              </main>
-              {!hideFooter && <Footer />}
+    <SidebarProvider>
+      <div className="flex flex-col min-h-screen w-full">
+        <AppSidebar 
+          handleLogout={handleLogout} 
+          getUserInitials={getUserInitials} 
+        />
+        
+        <SidebarInset className="w-full">
+          <div className="flex flex-col min-h-screen w-full">
+            <div className="flex items-center md:hidden p-4 z-50 absolute top-0 left-0">
+              <SidebarTrigger />
             </div>
-          </SidebarInset>
-        </SidebarProvider>
-      ) : (
-        <div className="flex flex-col min-h-screen w-full">
-          <Header />
-          <main className="flex-1 container mx-auto px-4 py-8 mt-16">
-            {children || <Outlet />}
-          </main>
-          {!hideFooter && <Footer />}
-        </div>
-      )}
+            <Header />
+            <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+              {children || <Outlet />}
+            </main>
+            {!hideFooter && <Footer />}
+          </div>
+        </SidebarInset>
+      </div>
       
       {/* Mobile Profile Drawer - shown only on mobile */}
       <MobileProfileDrawer 
-        showDrawer={isMobile && showSidebar} 
+        showDrawer={isMobile} 
         handleLogout={handleLogout} 
         getUserInitials={getUserInitials} 
       />
-    </div>
+    </SidebarProvider>
   );
 };
 

@@ -1,16 +1,13 @@
 
 import React from 'react';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
 import MorningCheckIn from '../components/forms/MorningCheckIn';
 import { Clock } from 'lucide-react';
+import Layout from '@/components/layout/Layout';
 
 const CheckIn = () => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      
-      <main className="pt-28 pb-20">
+    <Layout>
+      <div className="pt-8 pb-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <div className="inline-flex items-center justify-center bg-supernova-blue/20 p-3 rounded-full mb-4">
@@ -24,10 +21,8 @@ const CheckIn = () => {
           
           <MorningCheckIn />
         </div>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </Layout>
   );
 };
 
