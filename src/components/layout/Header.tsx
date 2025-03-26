@@ -7,7 +7,6 @@ import Navigation from './Navigation';
 import UserMenu from './UserMenu';
 import NotificationMenu from './NotificationMenu';
 import AuthButtons from './AuthButtons';
-import MobileNav from './MobileNav';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -55,26 +54,18 @@ const Header: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Mobile menu button - visible on mobile only */}
-            <div className="md:hidden">
-              <MobileNav isPublicPage={isPublicPage} />
-            </div>
-            
-            {/* Desktop menu items - visible on desktop only */}
-            <div className="hidden md:flex items-center space-x-4">
-              {user && isOnDashboard ? (
-                <>
-                  <NotificationMenu />
-                  <UserMenu user={user} />
-                </>
-              ) : (
-                <AuthButtons 
-                  isPublicPage={isPublicPage} 
-                  isOnDashboard={isOnDashboard} 
-                  currentPath={location.pathname} 
-                />
-              )}
-            </div>
+            {user && isOnDashboard ? (
+              <>
+                <NotificationMenu />
+                <UserMenu user={user} />
+              </>
+            ) : (
+              <AuthButtons 
+                isPublicPage={isPublicPage} 
+                isOnDashboard={isOnDashboard} 
+                currentPath={location.pathname} 
+              />
+            )}
           </div>
         </div>
       </div>
