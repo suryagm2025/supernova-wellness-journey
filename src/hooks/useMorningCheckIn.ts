@@ -43,7 +43,7 @@ export const useMorningCheckIn = () => {
         if (data) {
           // Pre-fill form with existing data
           const entryData = data as WellnessEntry;
-          const value = entryData.value;
+          const value = entryData.value as MorningCheckInValue;
           
           setWakeUpTime(value.wake_up_time || '');
           setWaterIntake(value.water_intake || '');
@@ -76,7 +76,7 @@ export const useMorningCheckIn = () => {
     try {
       setIsSubmitting(true);
       
-      const checkInData = {
+      const checkInData: Omit<WellnessEntry, 'id' | 'created_at'> = {
         user_id: user.id,
         type: 'morning_check_in',
         value: {

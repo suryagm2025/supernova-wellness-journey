@@ -33,6 +33,7 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import CookiePolicy from '@/pages/CookiePolicy';
 import TimeBasedFlow from '@/components/timeflows/TimeBasedFlow';
 import MorningCheckInPopup from '@/components/checkIn/MorningCheckInPopup';
+import ForgotPassword from '@/pages/ForgotPassword';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -51,11 +52,12 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<AppRoot />}>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/streak" element={<Streak />} />
-      <Route path="/emotion-check" element={<EmotionCheck />} />
+      <Route path="/login" element={<Layout><Login /></Layout>} />
+      <Route path="/signup" element={<Layout><SignUp /></Layout>} />
+      <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
+      <Route path="/reset-password" element={<Layout><ResetPassword /></Layout>} />
+      <Route path="/streak" element={<Layout><Streak /></Layout>} />
+      <Route path="/emotion-check" element={<Layout><EmotionCheck /></Layout>} />
       <Route path="/faq" element={<Layout><FAQ /></Layout>} />
       <Route path="/programs" element={<Layout><Programs /></Layout>} />
       <Route path="/blog" element={<Layout><Blog /></Layout>} />
