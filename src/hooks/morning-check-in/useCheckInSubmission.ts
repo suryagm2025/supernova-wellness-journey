@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 import { MorningCheckInFormState, MorningCheckInValue } from './types';
+import { Json } from '@/integrations/supabase/types';
 
 export const useCheckInSubmission = (
   user: any,
@@ -12,90 +12,111 @@ export const useCheckInSubmission = (
   setHasSavedData: (value: boolean) => void
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const { wakeUpTime, waterIntake, movement } = formState;
-    
-    if (!user) {
-      toast.error('You need to be logged in to complete morning check-in');
+    if (!formState.wakeUpTime || !formState.waterIntake || !formState.movement) {
+      toast.error('Please fill in all fields');
       return;
     }
 
-    if (!wakeUpTime || !waterIntake || !movement) {
-      toast.error('Please fill out all fields');
+    if (!user) {
+      toast.error('You need to be logged in to save your check-in');
       return;
     }
-    
+
+    setIsSubmitting(true);
+
     try {
-      setIsSubmitting(true);
-      
-      const checkInData = {
-        user_id: user.id,
-        type: 'morning_check_in',
-        value: {
-          wake_up_time: wakeUpTime,
-          water_intake: waterIntake,
-          movement: movement,
-          date: new Date().toISOString()
-        } as Json
+      // Format the data for Supabase
+      const checkInValue: MorningCheckInValue = {
+        wake_up_time: formState.wakeUpTime,
+        water_intake: formState.waterIntake,
+        movement: formState.movement,
+        date: new Date().toISOString().split('T')[0]
       };
-      
-      // Store check-in data in wellness_entries table
-      let result;
-      
+
+      // Cast to Json type for Supabase
+      const jsonValue = checkInValue as unknown as Json;
+
+      // Check if an entry already exists for today
       if (hasSavedData) {
-        // Update existing entry
+        // Update the existing entry
         const today = new Date();
         const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
         const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
         
-        const { data: existingEntry } = await supabase
+        const { data: existingEntries, error: fetchError } = await supabase
           .from('wellness_entries')
           .select('id')
           .eq('user_id', user.id)
           .eq('type', 'morning_check_in')
           .gte('created_at', startOfDay)
-          .lte('created_at', endOfDay)
-          .single();
+          .lte('created_at', endOfDay);
         
-        if (existingEntry) {
-          result = await supabase
+        if (fetchError) throw fetchError;
+        
+        if (existingEntries && existingEntries.length > 0) {
+          const { error: updateError } = await supabase
             .from('wellness_entries')
-            .update(checkInData)
-            .eq('id', existingEntry.id);
+            .update({ value: jsonValue })
+            .eq('id', existingEntries[0].id);
+          
+          if (updateError) throw updateError;
+          
+          toast.success('Morning check-in updated successfully!');
+        } else {
+          // If we thought we had saved data but can't find it, create a new entry
+          throw new Error('Could not find existing entry to update');
         }
       } else {
-        // Create new entry
-        result = await supabase
+        // Create a new entry
+        const { error: insertError } = await supabase
           .from('wellness_entries')
-          .insert(checkInData);
+          .insert({
+            user_id: user.id,
+            type: 'morning_check_in',
+            value: jsonValue
+          });
+        
+        if (insertError) throw insertError;
+        
+        setHasSavedData(true);
+        toast.success('Morning check-in saved successfully!');
       }
-      
-      if (result?.error) throw result.error;
-      
-      // Also log water intake in water_intake table
-      await logWaterIntake(waterIntake, user.id);
-      
-      // Log streak if needed
-      const { error: streakError } = await supabase.rpc('record_user_streak', { 
-        user_id: user.id 
-      });
-      
-      if (streakError) console.error('Error updating streak:', streakError);
-      
-      toast.success(hasSavedData ? 'Morning check-in updated!' : 'Morning check-in completed!');
-      
-      // Wait a moment before redirecting
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-      
     } catch (error: any) {
-      console.error('Morning check-in error:', error);
-      toast.error(error.message || 'Error during check-in');
+      console.error('Error saving morning check-in:', error);
+      toast.error(error.message || 'Failed to save morning check-in');
+      
+      // If there was an error updating, try inserting a new entry instead
+      if (hasSavedData) {
+        try {
+          const checkInValue: MorningCheckInValue = {
+            wake_up_time: formState.wakeUpTime,
+            water_intake: formState.waterIntake,
+            movement: formState.movement,
+            date: new Date().toISOString().split('T')[0]
+          };
+          
+          const jsonValue = checkInValue as unknown as Json;
+          
+          const { error: insertError } = await supabase
+            .from('wellness_entries')
+            .insert({
+              user_id: user.id,
+              type: 'morning_check_in',
+              value: jsonValue
+            });
+          
+          if (!insertError) {
+            toast.success('Morning check-in saved as a new entry');
+            setHasSavedData(true);
+          }
+        } catch (fallbackError) {
+          console.error('Error during fallback insert:', fallbackError);
+        }
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -105,39 +126,4 @@ export const useCheckInSubmission = (
     isSubmitting,
     handleSubmit
   };
-};
-
-// Helper function to parse and log water intake
-const logWaterIntake = async (waterIntake: string, userId: string) => {
-  let waterAmount = 0;
-  // Try to extract amount from water intake text
-  const waterRegex = /(\d+)\s*(ml|glass|glasses|oz|cup|cups)/i;
-  const waterMatch = waterIntake.match(waterRegex);
-  
-  if (waterMatch) {
-    const amount = parseInt(waterMatch[1]);
-    const unit = waterMatch[2].toLowerCase();
-    
-    // Convert to ml
-    if (unit.includes('glass') || unit.includes('cup')) {
-      waterAmount = amount * 250; // Assume one glass/cup is 250ml
-    } else if (unit.includes('oz')) {
-      waterAmount = amount * 30; // Approximate conversion
-    } else {
-      waterAmount = amount; // Already in ml
-    }
-    
-    // Log water intake if we could parse an amount
-    if (waterAmount > 0) {
-      const { error: waterError } = await supabase
-        .from('water_intake')
-        .insert({
-          user_id: userId,
-          amount_ml: waterAmount,
-          notes: `From morning check-in: ${waterIntake}`
-        });
-      
-      if (waterError) console.error('Error logging water intake:', waterError);
-    }
-  }
 };

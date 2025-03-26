@@ -1,3 +1,3 @@
 
 // Re-export the types from our new location for backward compatibility
-export { MorningCheckInValue, WellnessEntry } from '@/hooks/morning-check-in/types';
+export type { MorningCheckInValue, WellnessEntry } from '@/hooks/morning-check-in/types';

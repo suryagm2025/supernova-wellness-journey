@@ -4,7 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { MorningCheckInFormState, WellnessEntry, MorningCheckInValue } from './types';
 
-export const useExistingCheckIn = (user: any, setFormState: (state: Partial<MorningCheckInFormState>) => void) => {
+export const useExistingCheckIn = (
+  user: any, 
+  setFormState: (state: Partial<MorningCheckInFormState>) => void
+) => {
   const [hasSavedData, setHasSavedData] = useState(false);
 
   // Check if user has already completed a check-in today
@@ -34,7 +37,7 @@ export const useExistingCheckIn = (user: any, setFormState: (state: Partial<Morn
         if (data) {
           // Pre-fill form with existing data
           const entryData = data as WellnessEntry;
-          const value = entryData.value as unknown as MorningCheckInValue;
+          const value = entryData.value;
           
           setFormState({
             wakeUpTime: value.wake_up_time || '',

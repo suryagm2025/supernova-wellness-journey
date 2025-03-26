@@ -20,7 +20,10 @@ export const useMorningCheckIn = () => {
   const setMovement = (value: string) => setFormState(prev => ({ ...prev, movement: value }));
 
   // Custom hooks for handling existing check-in data and submission
-  const { hasSavedData, setHasSavedData } = useExistingCheckIn(user, setFormState);
+  const { hasSavedData, setHasSavedData } = useExistingCheckIn(user, (state) => {
+    setFormState(prev => ({ ...prev, ...state }));
+  });
+  
   const { isSubmitting, handleSubmit } = useCheckInSubmission(user, formState, hasSavedData, setHasSavedData);
 
   const handleVoiceInput = (transcript: string) => {
