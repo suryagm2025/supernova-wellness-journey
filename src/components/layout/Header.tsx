@@ -4,14 +4,17 @@ import { useLocation } from 'react-router-dom';
 import Logo from '../ui/Logo';
 import { useAuth } from '@/context/AuthContext';
 import Navigation from './Navigation';
+import MobileNavigation from './MobileNavigation';
 import UserMenu from './UserMenu';
 import NotificationMenu from './NotificationMenu';
 import AuthButtons from './AuthButtons';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   // Check if we're on the home page
   const isHomePage = location.pathname === '/';
@@ -43,6 +46,10 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+            {isMobile ? (
+              <MobileNavigation />
+            ) : null}
+            
             <div className="md:hidden">
               <Logo size="md" />
             </div>
