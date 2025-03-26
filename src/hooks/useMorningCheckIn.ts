@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { Json } from '@/integrations/supabase/types';
 
 interface FormData {
   sleepQuality: string;
@@ -87,10 +89,11 @@ const useMorningCheckIn = () => {
 
     try {
       // Structure the data for the wellness_entries table
+      // Convert FormData to Json compatible object
       const wellnessEntry = {
         user_id: user.id,
         type: 'morning_checkin',
-        value: formData,
+        value: formData as unknown as Json,
       };
 
       // Insert the wellness entry into the database
