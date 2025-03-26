@@ -1,20 +1,51 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import GlassMorphicCard from '../components/ui/GlassMorphicCard';
-import { Droplet, PlusCircle, MinusCircle } from 'lucide-react';
+import { Droplet } from 'lucide-react';
 import { toast } from 'sonner';
-import VoiceInput from '../components/VoiceInput';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Spinner } from '@/components/ui/spinner';
+import WaterVisualization from '@/components/water/WaterVisualization';
+import QuickAdjustControls from '@/components/water/QuickAdjustControls';
+import WaterIntakeForm from '@/components/water/WaterIntakeForm';
+import QuickLogButtons from '@/components/water/QuickLogButtons';
 
 const WaterIntake = () => {
   const [waterAmount, setWaterAmount] = useState('');
   const [totalWater, setTotalWater] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
+
+  // Fetch existing water intake data when component loads
+  useEffect(() => {
+    if (user) {
+      fetchTodayWaterIntake();
+    }
+  }, [user]);
+
+  const fetchTodayWaterIntake = async () => {
+    if (!user) return;
+
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const { data, error } = await supabase
+        .from('water_intake')
+        .select('amount_ml')
+        .eq('user_id', user.id)
+        .gte('created_at', today.toISOString());
+      
+      if (error) throw error;
+      
+      const total = data.reduce((sum, entry) => sum + entry.amount_ml, 0);
+      setTotalWater(total);
+    } catch (error: any) {
+      console.error('Error fetching water intake:', error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,18 +107,6 @@ const WaterIntake = () => {
     }
   };
 
-  const handleVoiceInput = (transcript: string) => {
-    // Process voice input to extract water amount
-    setWaterAmount(transcript);
-    // Auto-submit after a short delay if we have a voice input
-    setTimeout(() => {
-      const form = document.getElementById('water-form') as HTMLFormElement;
-      if (form && transcript) {
-        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-      }
-    }, 1000);
-  };
-
   const adjustWater = async (increment: number) => {
     if (!user) {
       toast.error('You need to be logged in to track water intake');
@@ -123,9 +142,6 @@ const WaterIntake = () => {
     }
   };
 
-  // Calculate percentage for the water visualization (max 3000ml)
-  const waterPercentage = Math.min(100, (totalWater / 3000) * 100);
-
   return (
     <div className="min-h-screen">
       <Header />
@@ -146,131 +162,27 @@ const WaterIntake = () => {
             <GlassMorphicCard className="p-6">
               <h3 className="text-xl font-display font-semibold mb-6">Today's Hydration</h3>
               
-              <div className="mb-8">
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-400 text-sm">Current intake</span>
-                  <span className="text-white font-medium">{(totalWater / 1000).toFixed(1)}L</span>
-                </div>
-                
-                <div className="h-6 bg-white/5 rounded-full overflow-hidden relative">
-                  <div 
-                    className="h-full bg-gradient-to-r from-supernova-blue to-supernova-purple transition-all duration-500 relative"
-                    style={{ width: `${waterPercentage}%` }}
-                  >
-                    <div className="absolute top-0 right-0 h-full w-full bg-white/20 animate-shimmer bg-[length:200%_100%]"></div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between mt-2">
-                  <span className="text-gray-400 text-sm">0L</span>
-                  <span className="text-gray-400 text-sm">Goal: 3.0L</span>
-                </div>
-              </div>
+              <WaterVisualization totalWater={totalWater} />
               
-              <div className="flex justify-center space-x-4 mb-6">
-                <button 
-                  onClick={() => adjustWater(-250)}
-                  disabled={isSubmitting}
-                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 transition-colors disabled:opacity-50"
-                >
-                  <MinusCircle size={24} />
-                </button>
-                <button 
-                  onClick={() => adjustWater(250)}
-                  disabled={isSubmitting}
-                  className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-supernova-blue transition-colors disabled:opacity-50"
-                >
-                  {isSubmitting ? <Spinner size="sm" className="mx-auto" /> : <PlusCircle size={24} />}
-                </button>
-              </div>
-              
-              <p className="text-center text-gray-400 text-sm">
-                Quick adjust: +/- one glass (250ml)
-              </p>
+              <QuickAdjustControls 
+                onAdjust={adjustWater}
+                isSubmitting={isSubmitting}
+              />
             </GlassMorphicCard>
             
             <GlassMorphicCard className="p-6">
               <h3 className="text-xl font-display font-semibold mb-6">Log Water Intake</h3>
               
-              {/* Voice Input */}
-              <div className="mb-6">
-                <VoiceInput 
-                  onTranscript={handleVoiceInput} 
-                  placeholder="Click the mic and say 'I drank 2 glasses of water'"
-                />
-              </div>
+              <WaterIntakeForm 
+                waterAmount={waterAmount}
+                onWaterAmountChange={setWaterAmount}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+              />
               
-              <form id="water-form" onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="block text-sm text-gray-300">
-                    How much water have you had?
-                  </label>
-                  <input
-                    type="text"
-                    value={waterAmount}
-                    onChange={(e) => setWaterAmount(e.target.value)}
-                    placeholder="e.g. 2 glasses or 500ml"
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-supernova-blue/50 transition-all"
-                  />
-                </div>
-                
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full button-glow bg-supernova-dark border border-supernova-blue/30 rounded-lg px-6 py-3 text-white font-medium transition-all hover:bg-white/5 hover:border-supernova-blue/50 disabled:opacity-50"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center">
-                        <Spinner size="sm" className="mr-2" />
-                        Logging...
-                      </span>
-                    ) : (
-                      'Log Water Intake'
-                    )}
-                  </button>
-                </div>
-              </form>
-              
-              <div className="mt-6 space-y-4">
-                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="text-white text-sm font-medium mb-2">Quick Logs:</h4>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => {
-                        setWaterAmount('1 glass');
-                      }}
-                      className="text-sm bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
-                    >
-                      1 glass (250ml)
-                    </button>
-                    <button
-                      onClick={() => {
-                        setWaterAmount('2 glasses');
-                      }}
-                      className="text-sm bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
-                    >
-                      2 glasses (500ml)
-                    </button>
-                    <button
-                      onClick={() => {
-                        setWaterAmount('500ml');
-                      }}
-                      className="text-sm bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
-                    >
-                      500ml
-                    </button>
-                    <button
-                      onClick={() => {
-                        setWaterAmount('1 liter');
-                      }}
-                      className="text-sm bg-white/5 hover:bg-white/10 px-3 py-2 rounded-lg transition-colors"
-                    >
-                      1 liter
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <QuickLogButtons 
+                onQuickLog={setWaterAmount}
+              />
             </GlassMorphicCard>
           </div>
         </div>
