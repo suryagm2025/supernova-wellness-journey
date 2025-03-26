@@ -31,11 +31,13 @@ import CookiePolicy from "./pages/CookiePolicy";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
+// Configure React Query client with better error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
@@ -43,7 +45,7 @@ const queryClient = new QueryClient({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <BrowserRouter basename="/">
+      <BrowserRouter>
         <AuthProvider>
           <Toaster />
           <Sonner />
@@ -63,7 +65,7 @@ const App = () => (
             </Route>
             
             {/* Auth callback doesn't need the layout */}
-            <Route path="auth/callback" element={<AuthCallback />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>

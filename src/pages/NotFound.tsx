@@ -15,18 +15,20 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-supernova-dark to-black/80">
       <Header />
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-9xl font-bold text-supernova-blue mb-4">404</h1>
-          <p className="text-2xl text-gray-600 mb-6">Oops! Page not found</p>
-          <p className="text-gray-500 mb-8">
-            The page you're looking for doesn't exist or has been moved.
-          </p>
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="text-center max-w-md mx-auto">
+          <div className="mb-8">
+            <h1 className="text-8xl md:text-9xl font-bold bg-gradient-to-r from-supernova-blue to-supernova-purple bg-clip-text text-transparent animate-pulse mb-4">404</h1>
+            <p className="text-2xl text-white mb-6">Page Not Found</p>
+            <p className="text-gray-400 mb-8">
+              The page you're looking for doesn't exist or has been moved.
+            </p>
+          </div>
           <Link 
             to="/" 
-            className="bg-supernova-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors"
+            className="inline-block bg-gradient-to-r from-supernova-blue to-supernova-purple hover:from-supernova-purple hover:to-supernova-blue text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
           >
             Return to Home
           </Link>
