@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -22,6 +23,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -35,8 +38,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Handle auth events with toasts
         if (event === 'SIGNED_IN') {
           toast.success('Successfully signed in!');
+          navigate('/dashboard');
         } else if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out');
+          navigate('/');
+        } else if (event === 'PASSWORD_RECOVERY') {
+          navigate('/reset-password');
         }
       }
     );
@@ -51,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   const signUp = async (email: string, password: string, metadata?: { full_name?: string }) => {
     try {
@@ -159,6 +166,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       
       toast.success('Password updated successfully');
+      navigate('/login');
     } catch (error: any) {
       toast.error(error.message || 'Error updating password');
       console.error('Update password error:', error.message);

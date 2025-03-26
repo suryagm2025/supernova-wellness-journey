@@ -1,76 +1,72 @@
 
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Suggestions from './pages/Suggestions';
-import WaterIntake from './pages/WaterIntake';
-import EmotionCheck from './pages/EmotionCheck';
-import EveningCheck from './pages/EveningCheck';
-import Activity from './pages/Activity';
-import Layout from './components/layout/Layout';
-import { Toaster } from 'sonner';
-import { supabase } from './integrations/supabase/client';
-import HealthTimeline from "./pages/HealthTimeline";
-import VoiceCompanion from "./pages/VoiceCompanion";
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import AuthCallback from './pages/AuthCallback';
-import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import React from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Navigate,
+  createRoutesFromElements,
+  Outlet
+} from 'react-router-dom';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+import Layout from '@/components/layout/Layout';
 import Home from './pages/Home';
-import Programs from './pages/Programs';
-import Blog from './pages/Blog';
-import FAQ from './pages/FAQ';
+import Dashboard from '@/pages/Dashboard';
+import Login from '@/pages/Login';
+import SignUp from './pages/SignUp';
+import Account from '@/pages/Account';
+import Settings from '@/pages/Settings';
+import CheckIn from '@/pages/CheckIn';
+import WaterIntake from '@/pages/WaterIntake';
+import Suggestions from '@/pages/Suggestions';
+import ResetPassword from '@/pages/ResetPassword';
+import Streak from '@/pages/Streak';
+import EmotionCheck from '@/pages/EmotionCheck';
 
-const App = () => {
-  const [session, setSession] = useState(null);
+// Separate AuthCheck component that uses the useAuth hook
+const AuthCheck = ({ children }: { children: React.ReactNode }) => {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
+};
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [])
-
+// App Root component to wrap everything with AuthProvider
+const AppRoot = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/programs" element={<Programs />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/faq" element={<FAQ />} />
-          
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/suggestions" element={<Suggestions />} />
-            <Route path="/water" element={<WaterIntake />} />
-            <Route path="/emotion-check" element={<EmotionCheck />} />
-            <Route path="/evening-check" element={<EveningCheck />} />
-            <Route path="/activity" element={<Activity />} />
-            <Route path="/health-timeline" element={<HealthTimeline />} />
-            <Route path="/voice-companion" element={<VoiceCompanion />} />
-          </Route>
-          
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-        <Toaster />
-      </AuthProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
   );
 };
+
+// Define routes using createRoutesFromElements
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AppRoot />}>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/streak" element={<Streak />} />
+      <Route path="/emotion-check" element={<EmotionCheck />} />
+      
+      {/* Protected routes */}
+      <Route path="/dashboard" element={<AuthCheck><Dashboard /></AuthCheck>} />
+      <Route path="/account" element={<AuthCheck><Account /></AuthCheck>} />
+      <Route path="/settings" element={<AuthCheck><Settings /></AuthCheck>} />
+      <Route path="/check-in" element={<AuthCheck><CheckIn /></AuthCheck>} />
+      <Route path="/water" element={<AuthCheck><WaterIntake /></AuthCheck>} />
+      <Route path="/suggestions" element={<AuthCheck><Suggestions /></AuthCheck>} />
+    </Route>
+  )
+);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
 
 export default App;

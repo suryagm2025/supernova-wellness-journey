@@ -1,40 +1,44 @@
 
 import React from 'react';
-import { useAuth } from '@/context/AuthContext';
-import DesktopNavigation from './navigation/DesktopNavigation';
-import MobileNavigation from './navigation/MobileNavigation';
-import Logo from '../ui/Logo';
+import { Link, useLocation } from 'react-router-dom';
+import { Flame } from 'lucide-react';
 
 interface NavigationProps {
-  isMobileMenuOpen: boolean;
-  setMobileMenuOpen: (open: boolean) => void;
-  isPublicPage?: boolean;
+  isPublicPage: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ 
-  isMobileMenuOpen, 
-  setMobileMenuOpen, 
-  isPublicPage = false 
-}) => {
-  const { user, signOut } = useAuth();
+const Navigation: React.FC<NavigationProps> = ({ isPublicPage }) => {
+  const location = useLocation();
+  
+  // Check if a nav link is active
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  if (isPublicPage) {
+    return null;
+  }
 
   return (
-    <nav className="flex items-center justify-between w-full">
-      <div className="flex items-center">
-        <Logo size="md" withText={true} />
-      </div>
-      
-      <DesktopNavigation 
-        user={user} 
-        signOut={signOut} 
-      />
-      
-      <MobileNavigation 
-        isOpen={isMobileMenuOpen} 
-        setIsOpen={setMobileMenuOpen} 
-        user={user} 
-        signOut={signOut} 
-      />
+    <nav className="hidden md:flex ml-10 space-x-6">
+      <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
+        Home
+      </Link>
+      <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
+        Dashboard
+      </Link>
+      <Link to="/programs" className={`nav-link ${isActive('/programs') ? 'active' : ''}`}>
+        Programs
+      </Link>
+      <Link to="/streak" className={`nav-link ${isActive('/streak') ? 'active' : ''} flex items-center`}>
+        Streak <Flame size={16} className="ml-1 text-supernova-blue" />
+      </Link>
+      <Link to="/blog" className={`nav-link ${isActive('/blog') ? 'active' : ''}`}>
+        Blog
+      </Link>
+      <Link to="/faq" className={`nav-link ${isActive('/faq') ? 'active' : ''}`}>
+        FAQ
+      </Link>
     </nav>
   );
 };
