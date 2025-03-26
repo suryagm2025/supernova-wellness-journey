@@ -3,7 +3,7 @@ import React from 'react';
 import GlassMorphicCard from '../ui/GlassMorphicCard';
 import { Clock, Droplet, StretchHorizontal, Mic } from 'lucide-react';
 import VoiceInput from '../VoiceInput';
-import { useMorningCheckIn } from '@/hooks/useMorningCheckIn';
+import { useMorningCheckIn } from '@/hooks/morning-check-in/useMorningCheckIn';
 import { Spinner } from '@/components/ui/spinner';
 import MorningCheckInField from './MorningCheckInField';
 
