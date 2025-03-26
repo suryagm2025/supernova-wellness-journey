@@ -31,7 +31,14 @@ import CookiePolicy from "./pages/CookiePolicy";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -42,40 +49,40 @@ const App = () => (
           <Sonner />
           <TimeBasedFlow />
           <Routes>
-            {/* Public routes with layout */}
-            <Route element={<Layout />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsOfUse />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
+            {/* Public routes */}
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Index />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<Signup />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="faq" element={<FAQ />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsOfUse />} />
+              <Route path="cookie-policy" element={<CookiePolicy />} />
             </Route>
             
             {/* Auth callback doesn't need the layout */}
             <Route path="/auth/callback" element={<AuthCallback />} />
             
-            {/* Protected routes with layout */}
+            {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/checkin" element={<CheckIn />} />
-                <Route path="/water" element={<WaterIntake />} />
-                <Route path="/meals" element={<MealLog />} />
-                <Route path="/activity" element={<Activity />} />
-                <Route path="/evening" element={<EveningCheck />} />
-                <Route path="/suggestions" element={<Suggestions />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/programs" element={<Programs />} />
-                <Route path="/blog" element={<Blog />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="checkin" element={<CheckIn />} />
+                <Route path="water" element={<WaterIntake />} />
+                <Route path="meals" element={<MealLog />} />
+                <Route path="activity" element={<Activity />} />
+                <Route path="evening" element={<EveningCheck />} />
+                <Route path="suggestions" element={<Suggestions />} />
+                <Route path="account" element={<Account />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="programs" element={<Programs />} />
+                <Route path="blog" element={<Blog />} />
               </Route>
             </Route>
             
-            {/* Fallback route */}
+            {/* Fallback route - must be last */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
