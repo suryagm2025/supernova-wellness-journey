@@ -18,7 +18,7 @@ const Header: React.FC = () => {
   const isHomePage = location.pathname === '/';
 
   // Check if we're on public pages like login/signup
-  const isPublicPage = ['/login', '/signup', '/forgot-password', '/reset-password'].includes(location.pathname);
+  const isPublicPage = ['/login', '/signup', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
 
   // Handle scroll events
   useEffect(() => {

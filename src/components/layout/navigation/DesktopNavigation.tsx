@@ -1,11 +1,15 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import NavLink from './NavLink';
 import { 
   Home, 
   LayoutDashboard, 
   ListChecks, 
-  Flame,
+  Droplet,
+  Brain,
+  Moon,
+  Activity,
   Calendar, 
   Mic,
   LogIn,
@@ -25,30 +29,40 @@ const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ user, signOut }) 
         Home
       </NavLink>
       
-      <NavLink to="/dashboard" icon={LayoutDashboard}>
-        Dashboard
-      </NavLink>
-      
-      <NavLink to="/check-in" icon={ListChecks}>
-        Check-in
-      </NavLink>
-      
-      <NavLink to="/suggestions" icon={Flame}>
-        Suggestions
-      </NavLink>
-      
-      <NavLink to="/health-timeline" icon={Calendar}>
-        Health Timeline
-      </NavLink>
-      
-      <NavLink to="/voice-companion" icon={Mic}>
-        Voice Assistant
-      </NavLink>
-      
       {user ? (
-        <button onClick={signOut} className="text-gray-400 hover:text-white transition">
-          Logout
-        </button>
+        <>
+          <NavLink to="/dashboard" icon={LayoutDashboard}>
+            Dashboard
+          </NavLink>
+          
+          <NavLink to="/emotion-check" icon={Brain}>
+            Emotion Check
+          </NavLink>
+          
+          <NavLink to="/water" icon={Droplet}>
+            Water Intake
+          </NavLink>
+          
+          <NavLink to="/evening-check" icon={Moon}>
+            Evening Check
+          </NavLink>
+          
+          <NavLink to="/activity" icon={Activity}>
+            Activity
+          </NavLink>
+          
+          <NavLink to="/health-timeline" icon={Calendar}>
+            Health Timeline
+          </NavLink>
+          
+          <NavLink to="/voice-companion" icon={Mic}>
+            Voice Assistant
+          </NavLink>
+          
+          <button onClick={signOut} className="text-gray-400 hover:text-white transition">
+            Logout
+          </button>
+        </>
       ) : (
         <>
           <NavLink to="/login" icon={LogIn}>
