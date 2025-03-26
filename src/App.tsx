@@ -23,17 +23,8 @@ import ResetPassword from '@/pages/ResetPassword';
 import Streak from '@/pages/Streak';
 import EmotionCheck from '@/pages/EmotionCheck';
 import FAQ from '@/pages/FAQ';
-
-// Separate AuthCheck component that uses the useAuth hook
-const AuthCheck = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
-  return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
-};
+import TimelineDashboard from '@/pages/TimelineDashboard';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -57,12 +48,15 @@ const router = createBrowserRouter(
       <Route path="/faq" element={<FAQ />} />
       
       {/* Protected routes */}
-      <Route path="/dashboard" element={<AuthCheck><Dashboard /></AuthCheck>} />
-      <Route path="/account" element={<AuthCheck><Account /></AuthCheck>} />
-      <Route path="/settings" element={<AuthCheck><Settings /></AuthCheck>} />
-      <Route path="/check-in" element={<AuthCheck><CheckIn /></AuthCheck>} />
-      <Route path="/water" element={<AuthCheck><WaterIntake /></AuthCheck>} />
-      <Route path="/suggestions" element={<AuthCheck><Suggestions /></AuthCheck>} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/timeline" element={<TimelineDashboard />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/check-in" element={<CheckIn />} />
+        <Route path="/water" element={<WaterIntake />} />
+        <Route path="/suggestions" element={<Suggestions />} />
+      </Route>
     </Route>
   )
 );
