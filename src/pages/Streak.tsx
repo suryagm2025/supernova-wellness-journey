@@ -1,5 +1,6 @@
 
 import React from 'react';
+import Header from '../components/layout/Header';
 import StreakDashboard from '../components/streak/StreakDashboard';
 import { Flame } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
