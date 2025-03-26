@@ -19,6 +19,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AuthCallback from './pages/AuthCallback';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import Home from './pages/Home';
 
 const App = () => {
   const [session, setSession] = useState(null);
@@ -39,6 +40,7 @@ const App = () => {
         <Layout>
           <Routes>
             {/* Public routes */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/signup" element={<Register />} />
@@ -48,7 +50,6 @@ const App = () => {
             
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/suggestions" element={<Suggestions />} />
               <Route path="/water" element={<WaterIntake />} />
