@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <Logo size="md" />
             <p className="mt-4 text-[#B0B0C3] text-sm">
-              Elevate your wellness journey with SuperiNova AI's personalized insights and tracking.
+              Elevate your wellness journey with SUPERINOVA AI's personalized insights and tracking.
             </p>
           </div>
           
@@ -46,7 +46,7 @@ const Footer = () => {
         
         <div className="border-t border-[#2A2A30] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-[#B0B0C3] text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SuperiNova AI. All rights reserved.
+            &copy; {new Date().getFullYear()} SUPERINOVA AI. All rights reserved.
           </p>
           
           <div className="flex space-x-4">

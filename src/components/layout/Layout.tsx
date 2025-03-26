@@ -38,9 +38,9 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
   const showSidebar = !isPublicPage;
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        {showSidebar && (
+    <div className="min-h-screen flex w-full">
+      {showSidebar && (
+        <SidebarProvider>
           <Sidebar>
             <SidebarHeader className="flex items-center px-4 py-2">
               <Logo size="sm" />
@@ -133,24 +133,34 @@ const Layout: React.FC<LayoutProps> = ({ children, hideFooter = false }) => {
             
             <SidebarRail />
           </Sidebar>
-        )}
-        
-        <SidebarInset className="w-full">
-          <div className="flex flex-col min-h-screen w-full">
-            {showSidebar && (
-              <div className="flex items-center md:hidden p-4 z-50 absolute top-0 left-0">
-                <SidebarTrigger />
-              </div>
-            )}
-            <Header />
-            <main className="flex-1 container mx-auto px-4 py-8 mt-16">
-              {children || <Outlet />}
-            </main>
-            {!hideFooter && <Footer />}
-          </div>
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+          
+          <SidebarInset className="w-full">
+            <div className="flex flex-col min-h-screen w-full">
+              {showSidebar && (
+                <div className="flex items-center md:hidden p-4 z-50 absolute top-0 left-0">
+                  <SidebarTrigger />
+                </div>
+              )}
+              <Header />
+              <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+                {children || <Outlet />}
+              </main>
+              {!hideFooter && <Footer />}
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      )}
+      
+      {!showSidebar && (
+        <div className="flex flex-col min-h-screen w-full">
+          <Header />
+          <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+            {children || <Outlet />}
+          </main>
+          {!hideFooter && <Footer />}
+        </div>
+      )}
+    </div>
   );
 };
 

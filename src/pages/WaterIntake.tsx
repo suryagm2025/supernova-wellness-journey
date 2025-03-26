@@ -149,8 +149,6 @@ const WaterIntake = () => {
 
   return (
     <div className="min-h-screen">
-      <Header />
-      
       <main className="pt-28 pb-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
@@ -201,8 +199,6 @@ const WaterIntake = () => {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };
