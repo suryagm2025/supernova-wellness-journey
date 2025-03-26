@@ -4,7 +4,9 @@ import {
   createBrowserRouter,
   RouterProvider,
   Route,
-  Navigate
+  Navigate,
+  createRoutesFromElements,
+  Outlet
 } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import Layout from '@/components/layout/Layout';
@@ -20,71 +22,49 @@ import Suggestions from '@/pages/Suggestions';
 import ResetPassword from '@/pages/ResetPassword';
 import Streak from '@/pages/Streak';
 
-function App() {
-  const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-    const { user, isLoading } = useAuth();
+// Separate AuthCheck component that uses the useAuth hook
+const AuthCheck = ({ children }: { children: React.ReactNode }) => {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
+};
 
-    if (isLoading) {
-      return <div>Loading...</div>; // Or a more appropriate loading indicator
-    }
-
-    return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
-  };
-
+// App Root component to wrap everything with AuthProvider
+const AppRoot = () => {
   return (
     <AuthProvider>
-      <RouterProvider 
-        router={
-          createBrowserRouter([
-            {
-              path: "/",
-              element: <Home />
-            },
-            {
-              path: "/dashboard",
-              element: <PrivateRoute><Dashboard /></PrivateRoute>
-            },
-            {
-              path: "/login",
-              element: <Login />
-            },
-            {
-              path: "/signup",
-              element: <SignUp />
-            },
-            {
-              path: "/account",
-              element: <PrivateRoute><Account /></PrivateRoute>
-            },
-            {
-              path: "/settings",
-              element: <PrivateRoute><Settings /></PrivateRoute>
-            },
-            {
-              path: "/check-in",
-              element: <PrivateRoute><CheckIn /></PrivateRoute>
-            },
-            {
-              path: "/water",
-              element: <PrivateRoute><WaterIntake /></PrivateRoute>
-            },
-            {
-              path: "/suggestions",
-              element: <PrivateRoute><Suggestions /></PrivateRoute>
-            },
-            {
-              path: "/reset-password",
-              element: <ResetPassword />
-            },
-            {
-              path: "/streak",
-              element: <Streak />
-            },
-          ])
-        } 
-      />
+      <Outlet />
     </AuthProvider>
   );
+};
+
+// Define routes using createRoutesFromElements
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AppRoot />}>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/streak" element={<Streak />} />
+      
+      {/* Protected routes */}
+      <Route path="/dashboard" element={<AuthCheck><Dashboard /></AuthCheck>} />
+      <Route path="/account" element={<AuthCheck><Account /></AuthCheck>} />
+      <Route path="/settings" element={<AuthCheck><Settings /></AuthCheck>} />
+      <Route path="/check-in" element={<AuthCheck><CheckIn /></AuthCheck>} />
+      <Route path="/water" element={<AuthCheck><WaterIntake /></AuthCheck>} />
+      <Route path="/suggestions" element={<AuthCheck><Suggestions /></AuthCheck>} />
+    </Route>
+  )
+);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;

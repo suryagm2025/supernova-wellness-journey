@@ -11,9 +11,9 @@ import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const SignUp = () => {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, signInWithGoogle, user } = useAuth();
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const SignUp = () => {
     setIsLoading(true);
     
     try {
-      await signUp(email, password, fullName);
+      await signUp(email, password, { full_name: fullName });
       // Redirection handled by AuthContext
     } catch (error) {
       // Error handling done in AuthContext
