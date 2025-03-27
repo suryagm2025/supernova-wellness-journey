@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Moon, ArrowRight, Music, Cloud, Leaf } from 'lucide-react';
+import { Moon, ArrowRight, Music, Cloud, Leaf, Tool } from 'lucide-react';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -31,6 +31,10 @@ const Sleep = () => {
   
   const handleFinish = () => {
     navigate('/dashboard');
+  };
+
+  const navigateToSleepTools = () => {
+    navigate('/sleep-tools');
   };
   
   return (
@@ -132,12 +136,21 @@ const Sleep = () => {
                   <p className="text-gray-300 mb-6">
                     Find a comfortable position and relax as you listen.
                   </p>
-                  <Button 
-                    onClick={handleFinish}
-                    className="bg-supernova-purple hover:bg-supernova-purple/80"
-                  >
-                    Continue to Dashboard <ArrowRight size={16} className="ml-2" />
-                  </Button>
+                  <div className="space-y-4">
+                    <Button 
+                      onClick={handleFinish}
+                      className="bg-supernova-purple hover:bg-supernova-purple/80 w-full"
+                    >
+                      Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                    </Button>
+                    <Button
+                      onClick={navigateToSleepTools}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Tool size={16} className="mr-2" /> Access Sleep Tools
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-6 animate-fade-in">
@@ -149,7 +162,7 @@ const Sleep = () => {
                       <p className="text-gray-300 mb-6">
                         Would you like a calming bedtime audio suggestion?
                       </p>
-                      <div className="flex justify-center gap-3">
+                      <div className="flex flex-col space-y-4">
                         <Button 
                           onClick={() => setShowAudioOptions(true)}
                           className="bg-supernova-purple hover:bg-supernova-purple/80"
@@ -162,6 +175,13 @@ const Sleep = () => {
                         >
                           No thanks
                         </Button>
+                        <Button
+                          onClick={navigateToSleepTools}
+                          variant="link"
+                          className="text-supernova-blue"
+                        >
+                          <Tool size={16} className="mr-2" /> Access Sleep Tools
+                        </Button>
                       </div>
                     </>
                   ) : (
@@ -172,12 +192,21 @@ const Sleep = () => {
                       <p className="text-gray-300 mb-6">
                         Keep the streak going 💤
                       </p>
-                      <Button 
-                        onClick={handleFinish}
-                        className="bg-supernova-purple hover:bg-supernova-purple/80"
-                      >
-                        Continue to Dashboard <ArrowRight size={16} className="ml-2" />
-                      </Button>
+                      <div className="space-y-4">
+                        <Button 
+                          onClick={handleFinish}
+                          className="bg-supernova-purple hover:bg-supernova-purple/80 w-full"
+                        >
+                          Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                        </Button>
+                        <Button
+                          onClick={navigateToSleepTools}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          <Tool size={16} className="mr-2" /> Access Sleep Tools
+                        </Button>
+                      </div>
                     </>
                   )}
                 </div>

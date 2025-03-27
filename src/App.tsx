@@ -39,6 +39,7 @@ import Onboarding from '@/pages/Onboarding';
 import PhysicalActivity from '@/pages/PhysicalActivity';
 import Sleep from '@/pages/Sleep';
 import WeeklySummary from '@/pages/WeeklySummary';
+import SleepTools from '@/pages/SleepTools';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -107,6 +108,7 @@ const router = createBrowserRouter(
         <Route path="/water" element={<WaterIntake />} />
         <Route path="/suggestions" element={<Suggestions />} />
         <Route path="/sleep" element={<Sleep />} />
+        <Route path="/sleep-tools" element={<SleepTools />} />
         <Route path="/activity" element={<PhysicalActivity />} />
         <Route path="/weekly-summary" element={<WeeklySummary />} />
       </Route>
