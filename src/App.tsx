@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   createBrowserRouter,
@@ -37,9 +36,10 @@ import ForgotPassword from '@/pages/ForgotPassword';
 import AuthCallback from '@/pages/AuthCallback';
 import Onboarding from '@/pages/Onboarding';
 import PhysicalActivity from '@/pages/PhysicalActivity';
+import ActivityTracking from '@/pages/ActivityTracking';
 import Sleep from '@/pages/Sleep';
-import WeeklySummary from '@/pages/WeeklySummary';
 import SleepTools from '@/pages/SleepTools';
+import WeeklySummary from '@/pages/WeeklySummary';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -110,6 +110,7 @@ const router = createBrowserRouter(
         <Route path="/sleep" element={<Sleep />} />
         <Route path="/sleep-tools" element={<SleepTools />} />
         <Route path="/activity" element={<PhysicalActivity />} />
+        <Route path="/activity-tracking" element={<ActivityTracking />} />
         <Route path="/weekly-summary" element={<WeeklySummary />} />
       </Route>
       

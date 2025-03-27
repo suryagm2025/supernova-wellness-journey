@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Activity, ArrowRight, Clock } from 'lucide-react';
+import { Activity, ArrowRight, Clock, BarChart } from 'lucide-react';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -31,6 +31,10 @@ const PhysicalActivity = () => {
   
   const handleFinish = () => {
     navigate('/dashboard');
+  };
+
+  const navigateToTracking = () => {
+    navigate('/activity-tracking');
   };
   
   return (
@@ -140,12 +144,21 @@ const PhysicalActivity = () => {
                   <p className="text-gray-300 mb-6">
                     Even small movements make a difference.
                   </p>
-                  <Button 
-                    onClick={handleFinish}
-                    className="bg-supernova-pink hover:bg-supernova-pink/80"
-                  >
-                    Continue to Dashboard <ArrowRight size={16} className="ml-2" />
-                  </Button>
+                  <div className="space-y-4">
+                    <Button 
+                      onClick={handleFinish}
+                      className="w-full bg-supernova-pink hover:bg-supernova-pink/80"
+                    >
+                      Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                    </Button>
+                    <Button
+                      onClick={navigateToTracking}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <BarChart size={16} className="mr-2" /> View Activity Tracking
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-6 animate-fade-in">
@@ -157,18 +170,27 @@ const PhysicalActivity = () => {
                       <p className="text-gray-300 mb-6">
                         Would you like a 2-minute stretch reminder for later?
                       </p>
-                      <div className="flex justify-center gap-3">
-                        <Button 
-                          onClick={() => setShowReminderOptions(true)}
-                          className="bg-supernova-pink hover:bg-supernova-pink/80"
+                      <div className="space-y-4">
+                        <div className="flex justify-center gap-3">
+                          <Button 
+                            onClick={() => setShowReminderOptions(true)}
+                            className="bg-supernova-pink hover:bg-supernova-pink/80"
+                          >
+                            Yes, set reminder
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            onClick={handleFinish}
+                          >
+                            No thanks
+                          </Button>
+                        </div>
+                        <Button
+                          onClick={navigateToTracking}
+                          variant="link"
+                          className="text-supernova-blue"
                         >
-                          Yes, set reminder
-                        </Button>
-                        <Button 
-                          variant="outline"
-                          onClick={handleFinish}
-                        >
-                          No thanks
+                          <BarChart size={16} className="mr-2" /> View Activity Tracking
                         </Button>
                       </div>
                     </>
@@ -180,12 +202,21 @@ const PhysicalActivity = () => {
                       <p className="text-gray-300 mb-6">
                         Consistency counts 💪
                       </p>
-                      <Button 
-                        onClick={handleFinish}
-                        className="bg-supernova-pink hover:bg-supernova-pink/80"
-                      >
-                        Continue to Dashboard <ArrowRight size={16} className="ml-2" />
-                      </Button>
+                      <div className="space-y-4">
+                        <Button 
+                          onClick={handleFinish}
+                          className="w-full bg-supernova-pink hover:bg-supernova-pink/80"
+                        >
+                          Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                        </Button>
+                        <Button
+                          onClick={navigateToTracking}
+                          variant="outline"
+                          className="w-full"
+                        >
+                          <BarChart size={16} className="mr-2" /> View Activity Tracking
+                        </Button>
+                      </div>
                     </>
                   )}
                 </div>

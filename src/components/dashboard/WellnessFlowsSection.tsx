@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Calendar, Moon, Activity, Tool } from 'lucide-react';
+import { Calendar, Moon, Activity, Wrench } from 'lucide-react';
 import WellnessCard from '@/components/ui/WellnessCard';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ const WellnessFlowsSection = () => {
         <WellnessCard
           title="Sleep Tools"
           description="Access calming playlists, routines, and sleep aids for better rest."
-          icon={<Tool size={24} />}
+          icon={<Wrench size={24} />}
           to="/sleep-tools"
           glowColor="blue"
         />

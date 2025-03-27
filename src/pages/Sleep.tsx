@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Moon, ArrowRight, Music, Cloud, Leaf, Tool } from 'lucide-react';
+import { Moon, ArrowRight, Music, Cloud, Leaf, Wrench } from 'lucide-react';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -148,7 +147,7 @@ const Sleep = () => {
                       variant="outline"
                       className="w-full"
                     >
-                      <Tool size={16} className="mr-2" /> Access Sleep Tools
+                      <Wrench size={16} className="mr-2" /> Access Sleep Tools
                     </Button>
                   </div>
                 </div>
@@ -180,7 +179,7 @@ const Sleep = () => {
                           variant="link"
                           className="text-supernova-blue"
                         >
-                          <Tool size={16} className="mr-2" /> Access Sleep Tools
+                          <Wrench size={16} className="mr-2" /> Access Sleep Tools
                         </Button>
                       </div>
                     </>
@@ -204,7 +203,7 @@ const Sleep = () => {
                           variant="outline"
                           className="w-full"
                         >
-                          <Tool size={16} className="mr-2" /> Access Sleep Tools
+                          <Wrench size={16} className="mr-2" /> Access Sleep Tools
                         </Button>
                       </div>
                     </>
