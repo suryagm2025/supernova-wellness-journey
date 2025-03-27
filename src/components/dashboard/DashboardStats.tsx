@@ -40,7 +40,7 @@ const DashboardStats = () => {
         current={sleepHours}
         goal={sleepGoal}
         unit="hours"
-        href="/evening-check"
+        href="/sleep"
       />
       
       <WellnessMetric

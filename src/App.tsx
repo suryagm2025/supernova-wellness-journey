@@ -36,6 +36,9 @@ import MorningCheckInPopup from '@/components/checkIn/MorningCheckInPopup';
 import ForgotPassword from '@/pages/ForgotPassword';
 import AuthCallback from '@/pages/AuthCallback';
 import Onboarding from '@/pages/Onboarding';
+import PhysicalActivity from '@/pages/PhysicalActivity';
+import Sleep from '@/pages/Sleep';
+import WeeklySummary from '@/pages/WeeklySummary';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -103,6 +106,9 @@ const router = createBrowserRouter(
         <Route path="/check-in" element={<CheckIn />} />
         <Route path="/water" element={<WaterIntake />} />
         <Route path="/suggestions" element={<Suggestions />} />
+        <Route path="/sleep" element={<Sleep />} />
+        <Route path="/activity" element={<PhysicalActivity />} />
+        <Route path="/weekly-summary" element={<WeeklySummary />} />
       </Route>
       
       {/* Not found route */}

@@ -31,6 +31,7 @@ const GlassMorphicCard: React.FC<GlassMorphicCardProps> = ({
         hoverEffect && 'hover:scale-[1.02] hover:bg-white/10',
         hoverEffect && glowClasses[glowColor],
         'transition-all duration-300',
+        onClick && 'cursor-pointer',
         className
       )}
       onClick={onClick}
