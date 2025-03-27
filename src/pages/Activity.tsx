@@ -12,6 +12,8 @@ import RecentActivities from '../components/activity/RecentActivities';
 const Activity = () => {
   const [activityDescription, setActivityDescription] = useState('');
   const [suggestMode, setSuggestMode] = useState(false);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +65,7 @@ const Activity = () => {
               
               <div className="space-y-8">
                 <ActivityTracker />
-                <RecentActivities />
+                <RecentActivities activities={activities} isLoading={loading} />
               </div>
             </div>
           </div>
