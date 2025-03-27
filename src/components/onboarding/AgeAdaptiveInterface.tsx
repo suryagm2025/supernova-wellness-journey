@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
-import { Clock, VolumeUp } from 'lucide-react';
+import { Clock, Volume } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface AgeAdaptiveInterfaceProps {
@@ -102,7 +102,7 @@ const AgeAdaptiveInterface: React.FC<AgeAdaptiveInterfaceProps> = ({
                 ? 'bg-supernova-blue/20 text-supernova-blue' 
                 : 'bg-white/10 text-gray-300'
             }`}>
-              <VolumeUp size={24} />
+              <Volume size={24} />
             </div>
             <div className="flex-1">
               <h3 className="font-medium mb-1">60 and above</h3>

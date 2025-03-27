@@ -7,13 +7,15 @@ interface GlassMorphicCardProps {
   className?: string;
   glowColor?: 'blue' | 'purple' | 'pink' | 'none';
   hoverEffect?: boolean;
+  onClick?: () => void;
 }
 
 const GlassMorphicCard: React.FC<GlassMorphicCardProps> = ({
   children,
   className,
   glowColor = 'blue',
-  hoverEffect = true
+  hoverEffect = true,
+  onClick
 }) => {
   const glowClasses = {
     blue: 'hover:shadow-glow-blue',
@@ -31,6 +33,7 @@ const GlassMorphicCard: React.FC<GlassMorphicCardProps> = ({
         'transition-all duration-300',
         className
       )}
+      onClick={onClick}
     >
       {children}
     </div>
