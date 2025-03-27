@@ -16,7 +16,7 @@ const WellnessFlowsSection = () => {
           description="View your personalized wellness insights and track your weekly progress."
           icon={<Calendar size={24} />}
           to="/weekly-summary"
-          glowColor="gold"
+          glowColor="pink"
         />
       </div>
     </section>

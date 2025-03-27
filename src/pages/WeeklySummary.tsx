@@ -132,9 +132,13 @@ const WeeklySummary = () => {
                               return (
                                 <ChartTooltipContent 
                                   payload={payload} 
-                                  formatter={(value, name) => (
-                                    <span>{value.toFixed(1)}/10</span>
-                                  )}
+                                  formatter={(value, name) => {
+                                    // Check if value is a number before using toFixed
+                                    const numericValue = typeof value === 'number' ? value : parseFloat(String(value));
+                                    return (
+                                      <span>{!isNaN(numericValue) ? numericValue.toFixed(1) : value}/10</span>
+                                    );
+                                  }}
                                   labelFormatter={(label) => {
                                     const date = new Date(label);
                                     return date.toLocaleDateString('en-US', { 
