@@ -1,0 +1,68 @@
+
+/* Senior-friendly UI mode styles */
+.senior-mode {
+  /* Larger font sizes */
+  --senior-scale: 1.25;
+}
+
+.senior-mode body {
+  font-size: calc(1rem * var(--senior-scale));
+}
+
+.senior-mode button,
+.senior-mode .btn,
+.senior-mode input,
+.senior-mode select,
+.senior-mode textarea {
+  font-size: calc(1rem * var(--senior-scale));
+  padding: calc(0.5rem * var(--senior-scale)) calc(0.75rem * var(--senior-scale));
+}
+
+.senior-mode h1 {
+  font-size: calc(2.25rem * var(--senior-scale));
+}
+
+.senior-mode h2 {
+  font-size: calc(1.75rem * var(--senior-scale));
+}
+
+.senior-mode h3 {
+  font-size: calc(1.5rem * var(--senior-scale));
+}
+
+.senior-mode p {
+  font-size: calc(1rem * var(--senior-scale));
+  line-height: 1.6;
+}
+
+/* Increase spacing for better readability */
+.senior-mode .container {
+  max-width: 1200px;
+}
+
+.senior-mode .space-y-4 {
+  margin-top: calc(1rem * var(--senior-scale));
+  margin-bottom: calc(1rem * var(--senior-scale));
+}
+
+/* Add more visible focus states */
+.senior-mode button:focus,
+.senior-mode a:focus,
+.senior-mode input:focus,
+.senior-mode select:focus,
+.senior-mode textarea:focus {
+  outline: 3px solid #4D90FE;
+  outline-offset: 2px;
+}
+
+/* Make clickable targets larger */
+.senior-mode button,
+.senior-mode .btn {
+  min-height: calc(3rem * var(--senior-scale));
+  min-width: calc(3rem * var(--senior-scale));
+}
+
+.senior-mode .checkbox,
+.senior-mode .radio {
+  transform: scale(1.25);
+}

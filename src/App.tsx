@@ -35,6 +35,7 @@ import TimeBasedFlow from '@/components/timeflows/TimeBasedFlow';
 import MorningCheckInPopup from '@/components/checkIn/MorningCheckInPopup';
 import ForgotPassword from '@/pages/ForgotPassword';
 import AuthCallback from '@/pages/AuthCallback';
+import Onboarding from '@/pages/Onboarding';
 
 // App Root component to wrap everything with AuthProvider
 const AppRoot = () => {
@@ -87,6 +88,7 @@ const router = createBrowserRouter(
         <Route path="/terms" element={<TermsOfUse />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
+        <Route path="/onboarding" element={<Onboarding />} />
       </Route>
       
       {/* Special auth callback route without layout */}

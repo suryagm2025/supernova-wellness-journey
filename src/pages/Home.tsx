@@ -6,6 +6,7 @@ import FeatureBreakdownSection from '../components/home/FeatureBreakdownSection'
 import TestimonialsSection from '../components/home/TestimonialsSection';
 import ErrorHandlingSection from '../components/home/ErrorHandlingSection';
 import PricingSection from '../components/home/PricingSection';
+import OnboardingCTA from '../components/home/OnboardingCTA';
 import Layout from '@/components/layout/Layout';
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
       <div className="min-h-screen pt-20">
         {/* Homepage Sections */}
         <HeroSection />
+        <OnboardingCTA />
         <SellingPointsSection />
         <FeatureBreakdownSection />
         <TestimonialsSection />
