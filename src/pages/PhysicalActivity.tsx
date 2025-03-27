@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Activity, ArrowRight } from 'lucide-react';
+import { Activity, ArrowRight, Clock } from 'lucide-react';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const PhysicalActivity = () => {
   const [activity, setActivity] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showReminderOptions, setShowReminderOptions] = useState(false);
+  const [reminderSet, setReminderSet] = useState(false);
   const navigate = useNavigate();
   
   const handleActivitySelection = (selectedActivity: string) => {
@@ -17,6 +19,14 @@ const PhysicalActivity = () => {
     
     // In a real app, this would be saved to a database
     toast.success("Activity data recorded!");
+  };
+  
+  const handleSetReminder = (timing: string) => {
+    setReminderSet(true);
+    setShowReminderOptions(false);
+    
+    // In a real app, this would schedule a notification
+    toast.success(`Stretch reminder scheduled for ${timing}`);
   };
   
   const handleFinish = () => {
@@ -75,6 +85,68 @@ const PhysicalActivity = () => {
                     </button>
                   </div>
                 </>
+              ) : showReminderOptions ? (
+                <div className="text-center py-6 animate-fade-in">
+                  <h2 className="text-xl font-display font-semibold mb-4">
+                    When would you like the reminder?
+                  </h2>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <button 
+                      onClick={() => handleSetReminder("in 15 minutes")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Clock size={24} className="text-supernova-pink mb-2" />
+                      <p className="text-lg font-medium">In 15 minutes</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleSetReminder("in 30 minutes")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Clock size={24} className="text-supernova-pink mb-2" />
+                      <p className="text-lg font-medium">In 30 minutes</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleSetReminder("in 1 hour")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Clock size={24} className="text-supernova-pink mb-2" />
+                      <p className="text-lg font-medium">In 1 hour</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleSetReminder("later today")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Clock size={24} className="text-supernova-pink mb-2" />
+                      <p className="text-lg font-medium">Later today</p>
+                    </button>
+                  </div>
+                  
+                  <Button 
+                    variant="outline"
+                    onClick={() => setShowReminderOptions(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              ) : reminderSet ? (
+                <div className="text-center py-6 animate-fade-in">
+                  <h2 className="text-xl font-display font-semibold mb-4">
+                    Reminder set! We'll nudge you with a gentle 2-minute stretch suggestion.
+                  </h2>
+                  <p className="text-gray-300 mb-6">
+                    Even small movements make a difference.
+                  </p>
+                  <Button 
+                    onClick={handleFinish}
+                    className="bg-supernova-pink hover:bg-supernova-pink/80"
+                  >
+                    Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                  </Button>
+                </div>
               ) : (
                 <div className="text-center py-6 animate-fade-in">
                   {activity === "none" ? (
@@ -87,7 +159,7 @@ const PhysicalActivity = () => {
                       </p>
                       <div className="flex justify-center gap-3">
                         <Button 
-                          onClick={() => toast.success("Stretch reminder set for later today")}
+                          onClick={() => setShowReminderOptions(true)}
                           className="bg-supernova-pink hover:bg-supernova-pink/80"
                         >
                           Yes, set reminder

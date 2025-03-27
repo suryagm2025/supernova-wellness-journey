@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Moon, ArrowRight } from 'lucide-react';
+import { Moon, ArrowRight, Music, Cloud, Leaf } from 'lucide-react';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const Sleep = () => {
   const [sleepHours, setSleepHours] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showAudioOptions, setShowAudioOptions] = useState(false);
+  const [selectedAudio, setSelectedAudio] = useState<string | null>(null);
   const navigate = useNavigate();
   
   const handleSleepSelection = (hours: string) => {
@@ -17,6 +19,14 @@ const Sleep = () => {
     
     // In a real app, this would be saved to a database
     toast.success("Sleep data recorded!");
+  };
+  
+  const handleAudioSelection = (audio: string) => {
+    setSelectedAudio(audio);
+    setShowAudioOptions(false);
+    
+    // In a real app, this would trigger an audio player
+    toast.success(`Playing: ${audio} - 10 minutes`);
   };
   
   const handleFinish = () => {
@@ -75,6 +85,60 @@ const Sleep = () => {
                     </button>
                   </div>
                 </>
+              ) : showAudioOptions ? (
+                <div className="text-center py-6 animate-fade-in">
+                  <h2 className="text-xl font-display font-semibold mb-4">
+                    Choose a calming audio to help you wind down:
+                  </h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <button 
+                      onClick={() => handleAudioSelection("Calming Rainfall")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Cloud size={32} className="text-supernova-blue mb-2" />
+                      <p className="text-lg font-medium">🌧️ Calming Rainfall</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleAudioSelection("LoFi Sleep Music")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Music size={32} className="text-supernova-purple mb-2" />
+                      <p className="text-lg font-medium">🎵 LoFi Sleep Music</p>
+                    </button>
+                    
+                    <button 
+                      onClick={() => handleAudioSelection("Nature Night Sounds")}
+                      className="p-4 bg-supernova-dark border border-white/10 rounded-lg hover:bg-white/5 transition-all flex flex-col items-center justify-center"
+                    >
+                      <Leaf size={32} className="text-supernova-gold mb-2" />
+                      <p className="text-lg font-medium">🍃 Nature Night Sounds</p>
+                    </button>
+                  </div>
+                  
+                  <Button 
+                    variant="outline"
+                    onClick={() => setShowAudioOptions(false)}
+                  >
+                    No thanks
+                  </Button>
+                </div>
+              ) : selectedAudio ? (
+                <div className="text-center py-6 animate-fade-in">
+                  <h2 className="text-xl font-display font-semibold mb-4">
+                    Playing: {selectedAudio} - 10 minutes
+                  </h2>
+                  <p className="text-gray-300 mb-6">
+                    Find a comfortable position and relax as you listen.
+                  </p>
+                  <Button 
+                    onClick={handleFinish}
+                    className="bg-supernova-purple hover:bg-supernova-purple/80"
+                  >
+                    Continue to Dashboard <ArrowRight size={16} className="ml-2" />
+                  </Button>
+                </div>
               ) : (
                 <div className="text-center py-6 animate-fade-in">
                   {sleepHours === "less-than-5" || sleepHours === "5-7" ? (
@@ -87,7 +151,7 @@ const Sleep = () => {
                       </p>
                       <div className="flex justify-center gap-3">
                         <Button 
-                          onClick={() => toast.success("Audio suggestion added to your evening routine")}
+                          onClick={() => setShowAudioOptions(true)}
                           className="bg-supernova-purple hover:bg-supernova-purple/80"
                         >
                           Yes, suggest audio
